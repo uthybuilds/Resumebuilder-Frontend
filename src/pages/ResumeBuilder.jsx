@@ -13,9 +13,14 @@ import {
   User,
 } from "lucide-react";
 import PersonalInfoForm from "../components/PersonalInfoForm";
+import ResumePreview from "../components/ResumePreview";
+import TemplateSelector from "../components/TemplateSelector";
+import ColorPicker from "../components/ColorPicker";
+import ProfessionalSummaryForm from "../components/ProfessionalSummaryForm";
 
 const ResumeBuilder = () => {
   const { resumeId } = useParams();
+
   const [resumeData, SetResumeData] = useState({
     _id: "",
     title: "",
@@ -79,6 +84,7 @@ const ResumeBuilder = () => {
   useEffect(() => {
     loadExistingResume();
   }, []);
+
   return (
     <div>
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -96,19 +102,39 @@ const ResumeBuilder = () => {
           <div className="relative lg:col-span-5 rounded-lg overflow-hidden">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1">
               {/* progress bar using activeSectionIndex */}
-              <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
-              <hr
-                className="absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-2000"
-                style={{
-                  width: `${
-                    (activeSectionIndex * 100) / (sections.length - 1)
-                  } %`,
-                }}
-              />
+              <div className="relative h-1 mb-6">
+                <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
+                <hr
+                  className="absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-700 rounded-full"
+                  style={{
+                    width: `${
+                      (activeSectionIndex * 100) / (sections.length - 1)
+                    }%`,
+                  }}
+                />
+              </div>
 
               {/* section navigation */}
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
-                <div></div>
+                <div className="flex items-center gap-2">
+                  <TemplateSelector
+                    selectedTemplate={resumeData.template}
+                    onChange={(template) =>
+                      SetResumeData((prev) => ({ ...prev, template }))
+                    }
+                  />
+
+                  <ColorPicker
+                    selectedColor={resumeData.accent_color}
+                    onChange={(color) =>
+                      SetResumeData((prev) => ({
+                        ...prev,
+                        accent_color: color,
+                      }))
+                    }
+                  />
+                </div>
+
                 <div className="flex items-center">
                   {activeSectionIndex !== 0 && (
                     <button
@@ -123,6 +149,7 @@ const ResumeBuilder = () => {
                       <ChevronLeft className="size-4" /> Previous
                     </button>
                   )}
+
                   <button
                     onClick={() =>
                       setActiveSectionIndex((prevIndex) =>
@@ -134,13 +161,13 @@ const ResumeBuilder = () => {
                     }`}
                     disabled={activeSectionIndex === sections.length - 1}
                   >
-                    {" "}
                     Next
                     <ChevronRight className="size-4" />
                   </button>
                 </div>
               </div>
-              {/* form content */}
+
+              {/* Form Content */}
               <div className="space-y-6">
                 {activeSection.id === "personal" && (
                   <PersonalInfoForm
@@ -155,11 +182,34 @@ const ResumeBuilder = () => {
                     setRemoveBackground={setRemoveBackground}
                   />
                 )}
+
+                {activeSection.id === "summary" && (
+                  <ProfessionalSummaryForm
+                    data={resumeData.professional_summary}
+                    onChange={(data) =>
+                      SetResumeData((prev) => ({
+                        ...prev,
+                        professional_summary: data,
+                      }))
+                    }
+                    setResumeData={SetResumeData}
+                  />
+                )}
               </div>
             </div>
           </div>
-          {/* right panel - Preview  */}
-          <div></div>
+
+          {/* right panel - Preview */}
+          <div className="lg:col-span-7 max-lg:mt-6">
+            <div>{/* buttons */}</div>
+
+            {/* resume preview */}
+            <ResumePreview
+              data={resumeData}
+              template={resumeData.template}
+              accentColor={resumeData.accent_color}
+            />
+          </div>
         </div>
       </div>
     </div>
