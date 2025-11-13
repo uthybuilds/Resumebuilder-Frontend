@@ -1,4 +1,4 @@
-import { GraduationCap, Plus, Trash2 } from "lucide-react";
+import { GraduationCap, Hand, Plus, Trash2 } from "lucide-react";
 import React from "react";
 
 const EducationForm = ({ data, onChange }) => {
@@ -44,7 +44,7 @@ const EducationForm = ({ data, onChange }) => {
           <div className="text-center py-8 text-gray-500">
             <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
             <p>No education background added yet.</p>
-            <p className="text-sm">Click 'Add Education" to get started.</p>
+            <p className="text-sm">Click "Add Education" to get started now.</p>
           </div>
         ) : (
           <div className="space-y-4">
