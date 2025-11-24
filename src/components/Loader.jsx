@@ -2,8 +2,8 @@ import React from "react";
 
 const Loader = () => {
   return (
-    <div className="flex items-center h-screen">
-      <div className="size-12 borde-3 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+    <div className="flex justify-center items-center h-screen">
+      <div className="size-12 border-3 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 };
