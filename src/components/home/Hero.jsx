@@ -1,19 +1,21 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
+  const { user } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   const logos = [
-    "https://saasly.prebuiltui.com/assets/companies-logo/instagram.svg",
-    "https://saasly.prebuiltui.com/assets/companies-logo/framer.svg",
-    "https://saasly.prebuiltui.com/assets/companies-logo/microsoft.svg",
-    "https://saasly.prebuiltui.com/assets/companies-logo/huawei.svg",
-    "https://saasly.prebuiltui.com/assets/companies-logo/walmart.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
   ];
   return (
     <>
-      <div className="min-h-screen pb-20">
+      <div className="pb-10">
         {/* Navbar */}
         <nav className="z-50 flex items-center justify-between w-full py-4 px-6 md:px-16 lg:px-24 xl:px-40 text-sm">
           <a href="https://prebuiltui.com">
@@ -39,14 +41,23 @@ const Hero = () => {
             <Link
               to="/app?state=register"
               className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white"
+              hidden={user}
             >
               Get started
             </Link>
             <Link
               to="/app?state=login"
               className="hidden md:block px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900"
+              hidden={user}
             >
               Login
+            </Link>
+            <Link
+              to="/app"
+              className="hidden md:block px-8 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white"
+              hidden={!user}
+            >
+              Dashboard
             </Link>
           </div>
 
@@ -215,7 +226,7 @@ const Hero = () => {
           </div>
 
           <p className="py-6 text-slate-600 mt-14">
-            Trusting by leading brands, including
+            Trusted by leading brands, including
           </p>
 
           <div
@@ -227,7 +238,7 @@ const Hero = () => {
                 key={index}
                 src={logo}
                 alt="logo"
-                className="h-6 w-auto max-w-xs"
+                className="h-8 w-auto object-contain"
               />
             ))}
           </div>

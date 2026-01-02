@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CallToAction = () => {
   return (
@@ -10,10 +11,10 @@ const CallToAction = () => {
       >
         <div className="flex flex-col md:flex-row text-center md:text-left items-center justify-between gap-8 px-3 md:px-10 border-x border-dashed border-slate-200 py-16 sm:py-20 -mt-10 -mb-10 w-full">
           <p className="text-xl font-medium max-w-md text-slate-800">
-            Build a professional Resume That Helps You Stand Out and Get Hired
+            Ready to land your dream job? Build your professional resume today.
           </p>
-          <a
-            href="https://prebuiltui.com"
+          <Link
+            to="/app"
             className="flex items-center gap-2 rounded py-3 px-8 bg-green-600 hover:bg-green-700 transition text-white"
           >
             <span>Get Started</span>
@@ -32,7 +33,7 @@ const CallToAction = () => {
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

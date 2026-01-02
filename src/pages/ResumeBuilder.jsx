@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { dummyResumeData } from "../assets/assets";
 import {
   ArrowLeftIcon,
   Briefcase,
@@ -25,14 +24,18 @@ import ExperienceForm from "../components/ExperienceForm";
 import EducationForm from "../components/EducationForm";
 import ProjectForm from "../components/ProjectForm";
 import SkillsForm from "../components/SkillsForm";
+import { useSelector } from "react-redux";
+import api from "../configs/api";
+import toast from "react-hot-toast";
 
 const ResumeBuilder = () => {
   const { resumeId } = useParams();
+  const { token } = useSelector((state) => state.auth);
 
-  const [resumeData, SetResumeData] = useState({
+  const [resumeData, setResumeData] = useState({
     _id: "",
     title: "",
-    professional_info: {},
+    personal_info: {},
     professional_summary: "",
     experience: [],
     education: [],
@@ -44,15 +47,43 @@ const ResumeBuilder = () => {
   });
 
   const loadExistingResume = async () => {
-    const resume = dummyResumeData.find((resume) => resume._id == resumeId);
-    if (resume) {
-      SetResumeData(resume);
-      document.title = resume.title;
+    try {
+      const { data } = await api.get("/api/resumes/get/" + resumeId, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (data.resume) {
+        const r = data.resume;
+        preventAutoSave.current = true;
+        setResumeData({
+          _id: r._id || "",
+          title: r.title || "",
+          personal_info: r.personal_info || {},
+          professional_summary:
+            typeof r.professional_summary === "string"
+              ? r.professional_summary
+              : "",
+          experience: Array.isArray(r.experience) ? r.experience : [],
+          education: Array.isArray(r.education) ? r.education : [],
+          project: Array.isArray(r.project) ? r.project : [],
+          skills: Array.isArray(r.skills) ? r.skills : [],
+          template: r.template || "classic",
+          accent_color: r.accent_color || "#3B82F6",
+          public: r.public ?? false,
+        });
+
+        document.title = r.title;
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
+  const preventAutoSave = useRef(true);
 
   const sections = [
     {
@@ -90,12 +121,78 @@ const ResumeBuilder = () => {
   const activeSection = sections[activeSectionIndex];
 
   useEffect(() => {
-    loadExistingResume();
-  }, []);
+    if (resumeId) {
+      loadExistingResume();
+    }
+  }, [resumeId]);
+
+  const saveResume = async (payload) => {
+    try {
+      const currentData = payload || resumeData;
+      const formData = new FormData();
+      formData.append("resumeId", resumeId);
+      formData.append("removeBackground", removeBackground ? "true" : "false");
+      const dataToSend = { ...currentData };
+      if (
+        dataToSend.personal_info &&
+        typeof dataToSend.personal_info.image === "object"
+      ) {
+        formData.append("image", dataToSend.personal_info.image);
+        dataToSend.personal_info = { ...dataToSend.personal_info };
+        delete dataToSend.personal_info.image;
+      }
+      formData.append("resumeData", JSON.stringify(dataToSend));
+      const { data } = await api.put("/api/resumes/update", formData, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (data.resume) {
+        setResumeData(data.resume);
+        toast.success(data.message || "Saved Successfully");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
+  };
 
   const changeResumeVisibility = async () => {
-    SetResumeData({ ...resumeData, public: !resumeData.public });
+    const updated = { ...resumeData, public: !resumeData.public };
+    preventAutoSave.current = true;
+    setResumeData(updated);
+    await saveResume(updated);
   };
+
+  const enhanceSummary = async () => {
+    try {
+      const { data } = await api.post(
+        "/api/ai/enhance-pro-sum",
+        { userContent: resumeData.professional_summary },
+        { headers: { Authorization: token } }
+      );
+      if (data.enhancedContent) {
+        setResumeData((prev) => ({
+          ...prev,
+          professional_summary: data.enhancedContent,
+        }));
+        toast.success("Summary enhanced");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (preventAutoSave.current) {
+      preventAutoSave.current = false;
+      return;
+    }
+    const t = setTimeout(() => {
+      saveResume();
+    }, 800);
+    return () => clearTimeout(t);
+  }, [resumeData]);
 
   const handleShare = () => {
     const frontendUrl = window.location.href.split("/app/")[0];
@@ -107,6 +204,7 @@ const ResumeBuilder = () => {
       alert("Share not supported on this browser.");
     }
   };
+
   const downloadResume = () => {
     window.print();
   };
@@ -146,14 +244,14 @@ const ResumeBuilder = () => {
                   <TemplateSelector
                     selectedTemplate={resumeData.template}
                     onChange={(template) =>
-                      SetResumeData((prev) => ({ ...prev, template }))
+                      setResumeData((prev) => ({ ...prev, template }))
                     }
                   />
 
                   <ColorPicker
                     selectedColor={resumeData.accent_color}
                     onChange={(color) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         accent_color: color,
                       }))
@@ -199,7 +297,7 @@ const ResumeBuilder = () => {
                   <PersonalInfoForm
                     data={resumeData.personal_info}
                     onChange={(data) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         personal_info: data,
                       }))
@@ -213,12 +311,12 @@ const ResumeBuilder = () => {
                   <ProfessionalSummaryForm
                     data={resumeData.professional_summary}
                     onChange={(data) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         professional_summary: data,
                       }))
                     }
-                    setResumeData={SetResumeData}
+                    onEnhance={enhanceSummary}
                   />
                 )}
 
@@ -226,40 +324,43 @@ const ResumeBuilder = () => {
                   <ExperienceForm
                     data={resumeData.experience}
                     onChange={(data) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         experience: data,
                       }))
                     }
                   />
                 )}
+
                 {activeSection.id === "education" && (
                   <EducationForm
                     data={resumeData.education}
                     onChange={(data) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         education: data,
                       }))
                     }
                   />
                 )}
+
                 {activeSection.id === "projects" && (
                   <ProjectForm
                     data={resumeData.project}
                     onChange={(data) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         project: data,
                       }))
                     }
                   />
                 )}
+
                 {activeSection.id === "skills" && (
                   <SkillsForm
                     data={resumeData.skills}
                     onChange={(data) =>
-                      SetResumeData((prev) => ({
+                      setResumeData((prev) => ({
                         ...prev,
                         skills: data,
                       }))
@@ -267,7 +368,11 @@ const ResumeBuilder = () => {
                   />
                 )}
               </div>
-              <button className="bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm">
+
+              <button
+                onClick={() => saveResume()}
+                className="bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm"
+              >
                 Save Changes
               </button>
             </div>
@@ -286,6 +391,7 @@ const ResumeBuilder = () => {
                     <Share2Icon className="size-4" /> Share
                   </button>
                 )}
+
                 <button
                   onClick={changeResumeVisibility}
                   className="flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 rounded-lg ring-purple-300 hover:ring transition-colors"
@@ -297,6 +403,7 @@ const ResumeBuilder = () => {
                   )}
                   {resumeData.public ? "Public" : "Private"}
                 </button>
+
                 <button
                   onClick={downloadResume}
                   className="flex items-center py-2 px-6 gap-2 text-xs bg-gradient-to-br from-green-100 to-green-200 text-green-600 rounded-lg ring-green-300 hover:ring transition-colors"

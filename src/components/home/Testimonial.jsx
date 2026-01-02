@@ -9,24 +9,32 @@ const Testimonial = () => {
         "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200",
       name: "Briar Martin",
       handle: "@neilstellar",
+      review:
+        "I landed my dream job within a week of using this resume builder! The AI suggestions were spot on.",
     },
     {
       image:
         "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200",
       name: "Avery Johnson",
       handle: "@averywrites",
+      review:
+        "The templates are professional and ATS-friendly. I highly recommend this tool to anyone job hunting.",
     },
     {
       image:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&auto=format&fit=crop&q=60",
       name: "Jordan Lee",
       handle: "@jordantalks",
+      review:
+        "Building my resume was always a struggle, but this made it so easy. The download feature is seamless.",
     },
     {
       image:
         "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&auto=format&fit=crop&q=60",
       name: "Avery Johnson",
       handle: "@averywrites",
+      review:
+        "I was skeptical at first, but the results speak for themselves. I got three interviews in two days!",
     },
   ];
 
@@ -58,9 +66,7 @@ const Testimonial = () => {
           <span className="text-xs text-slate-500">{card.handle}</span>
         </div>
       </div>
-      <p className="text-sm py-4 text-gray-800">
-        Radiant made undercutting all of our competitors an absolute breeze.
-      </p>
+      <p className="text-sm py-4 text-gray-800">{card.review}</p>
     </div>
   );
 

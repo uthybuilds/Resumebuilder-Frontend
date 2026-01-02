@@ -17,18 +17,21 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
-                  Support
+                <a
+                  href="#templates"
+                  className="hover:text-green-600 transition"
+                >
+                  Templates
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
+                <a href="#pricing" className="hover:text-green-600 transition">
                   Pricing
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
-                  Affiliate
+                <a href="#examples" className="hover:text-green-600 transition">
+                  Examples
                 </a>
               </li>
             </ul>
@@ -37,22 +40,22 @@ const Footer = () => {
             <p className="text-slate-800 font-semibold">Resources</p>
             <ul className="mt-2 space-y-2">
               <li>
-                <a href="/" className="hover:text-green-600 transition">
-                  Company
+                <a href="#blog" className="hover:text-green-600 transition">
+                  Blog
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
-                  Blogs
+                <a href="#guide" className="hover:text-green-600 transition">
+                  Guide
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
-                  Community
+                <a href="#tips" className="hover:text-green-600 transition">
+                  Tips
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
+                <a href="#careers" className="hover:text-green-600 transition">
                   Careers
                   <span className="text-xs text-white bg-green-600 rounded-md ml-2 px-2 py-1">
                     We’re hiring!
@@ -60,7 +63,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
+                <a href="#about" className="hover:text-green-600 transition">
                   About
                 </a>
               </li>
@@ -70,12 +73,12 @@ const Footer = () => {
             <p className="text-slate-800 font-semibold">Legal</p>
             <ul className="mt-2 space-y-2">
               <li>
-                <a href="/" className="hover:text-green-600 transition">
+                <a href="#privacy" className="hover:text-green-600 transition">
                   Privacy
                 </a>
               </li>
               <li>
-                <a href="/" className="hover:text-green-600 transition">
+                <a href="#terms" className="hover:text-green-600 transition">
                   Terms
                 </a>
               </li>
@@ -84,15 +87,11 @@ const Footer = () => {
         </div>
         <div className="flex flex-col max-md:items-center max-md:text-center gap-2 items-end">
           <p className="max-w-60">
-            Making every customer feel valued—no matter the size of your
-            audience.
+            Empowering job seekers with professional tools to build their
+            future.
           </p>
           <div className="flex items-center gap-4 mt-3">
-            <a
-              href="https://dribbble.com/prebuiltui"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="#" target="_blank" rel="noreferrer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -112,11 +111,7 @@ const Footer = () => {
                 <path d="M8.56 2.75c4.37 6 6 9.42 8 17.72"></path>
               </svg>
             </a>
-            <a
-              href="https://www.linkedin.com/company/prebuiltui"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="#" target="_blank" rel="noreferrer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -135,7 +130,7 @@ const Footer = () => {
                 <circle cx="4" cy="4" r="2"></circle>
               </svg>
             </a>
-            <a href="https://x.com/prebuiltui" target="_blank" rel="noreferrer">
+            <a href="#" target="_blank" rel="noreferrer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -152,11 +147,7 @@ const Footer = () => {
                 <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
               </svg>
             </a>
-            <a
-              href="https://www.youtube.com/@prebuiltui"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="#" target="_blank" rel="noreferrer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
