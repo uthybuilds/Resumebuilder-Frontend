@@ -59,7 +59,7 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 sm:left-auto sm:right-0 min-w-[16rem] w-[calc(100vw-2rem)] sm:w-72 p-3 mt-2 space-y-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm max-h-[80vh] overflow-y-auto">
+        <div className="absolute top-full left-0 sm:left-auto sm:right-0 min-w-[16rem] w-[calc(100vw-2rem)] sm:w-72 p-3 mt-2 grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm max-h-[80vh] overflow-y-auto">
           {templates.map((template) => (
             <div
               key={template.id}
@@ -67,7 +67,7 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
                 onChange(template.id);
                 setIsOpen(false);
               }}
-              className={`relative p-3 rounded-md cursor-pointer border transition-all ${
+              className={`relative p-2 sm:p-3 rounded-md cursor-pointer border transition-all ${
                 selectedTemplate === template.id
                   ? "border-blue-400 bg-blue-100"
                   : "border-gray-300 hover:border-gray-400 hover:bg-gray-100"
@@ -75,14 +75,16 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
             >
               {selectedTemplate === template.id && (
                 <div className="absolute top-2 right-2">
-                  <div className="size-5 bg-blue-400 rounded-full flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
+                  <div className="size-4 sm:size-5 bg-blue-400 rounded-full flex items-center justify-center">
+                    <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
                   </div>
                 </div>
               )}
               <div className="space-y-1">
-                <h4 className="font-medium text-gray-800">{template.name}</h4>
-                <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-gray-500 italic">
+                <h4 className="font-medium text-gray-800 text-sm">
+                  {template.name}
+                </h4>
+                <div className="mt-1 sm:mt-2 p-1.5 sm:p-2 bg-blue-50 rounded text-[10px] sm:text-xs text-gray-500 italic">
                   {template.preview}
                 </div>
               </div>
