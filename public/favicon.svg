@@ -1,6 +1,6 @@
-<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Icon: Document with Sparkles (AI/Modern feel) -->
-  <g transform="translate(10, 5)">
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Centered Document Icon -->
+  <g transform="translate(1, -4) scale(0.8)">
     <!-- Document background -->
     <path d="M5 0H25C27.7614 0 30 2.23858 30 5V35C30 37.7614 27.7614 40 25 40H5C2.23858 40 0 37.7614 0 35V5C0 2.23858 2.23858 0 5 0Z" fill="#4F46E5" />
     <!-- Document lines -->
@@ -10,9 +10,4 @@
     <!-- Sparkle/Star -->
     <path d="M28 0L29.5 3.5L33 5L29.5 6.5L28 10L26.5 6.5L23 5L26.5 3.5L28 0Z" fill="#F59E0B" stroke="white" stroke-width="1"/>
   </g>
-
-  <!-- Text: Resume AI -->
-  <text x="50" y="32" font-family="Arial, sans-serif" font-weight="bold" font-size="28" fill="#1F2937">
-    Resume<tspan fill="#4F46E5">AI</tspan>
-  </text>
 </svg>

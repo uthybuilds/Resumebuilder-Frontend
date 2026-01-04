@@ -2,11 +2,36 @@
 const MinimalTemplate = ({ data, accentColor }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
-        const [year, month] = dateStr.split("-");
-        return new Date(year, month - 1).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short"
-        });
+        const s = String(dateStr).trim();
+        if (!s || s.toLowerCase().includes("invalid")) return "";
+        if (/^\d{4}$/.test(s)) {
+            return new Date(parseInt(s, 10), 0, 1).toLocaleDateString("en-US", { year: "numeric" });
+        }
+        const iso = s.match(/^(\d{4})[-/](\d{1,2})(?:[-/](\d{1,2}))?$/);
+        if (iso) {
+            const y = parseInt(iso[1], 10);
+            const m = parseInt(iso[2], 10);
+            if (y && m >= 1 && m <= 12) {
+                return new Date(y, m - 1, 1).toLocaleDateString("en-US", { year: "numeric", month: "short" });
+            }
+        }
+        const word = s.match(/^([A-Za-z]+)\s+(\d{4})$/);
+        if (word) {
+            const map = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11,
+                january:0,february:1,march:2,april:3,june:5,july:6,august:7,september:8,october:9,november:10,december:11 };
+            const key = word[1].toLowerCase();
+            const mo = map[key];
+            const y = parseInt(word[2], 10);
+            if (mo !== undefined) {
+                return new Date(y, mo, 1).toLocaleDateString("en-US", { year: "numeric", month: "short" });
+            }
+        }
+        if (/present/i.test(s)) return "Present";
+        const d = new Date(s);
+        if (!isNaN(d.getTime())) {
+            return d.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+        }
+        return "";
     };
 
     return (
@@ -51,9 +76,16 @@ const MinimalTemplate = ({ data, accentColor }) => {
                             <div key={index}>
                                 <div className="flex justify-between items-baseline mb-1">
                                     <h3 className="text-lg font-medium">{exp.position}</h3>
-                                    <span className="text-sm text-gray-500">
-                                        {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
-                                    </span>
+                                    {(() => {
+                                        const start = formatDate(exp.start_date);
+                                        const end = exp.is_current ? "Present" : formatDate(exp.end_date);
+                                        const hasDate = !!start || !!end;
+                                        return hasDate ? (
+                                            <span className="text-sm text-gray-500">
+                                                {start}{start && end ? " - " : ""}{end}
+                                            </span>
+                                        ) : null;
+                                    })()}
                                 </div>
                                 <p className="text-gray-600 mb-2">{exp.company}</p>
                                 {exp.description && (
@@ -102,9 +134,14 @@ const MinimalTemplate = ({ data, accentColor }) => {
                                     <p className="text-gray-600">{edu.institution}</p>
                                     {edu.gpa && <p className="text-sm text-gray-500">GPA: {edu.gpa}</p>}
                                 </div>
-                                <span className="text-sm text-gray-500">
-                                    {formatDate(edu.graduation_date)}
-                                </span>
+                                {(() => {
+                                    const grad = formatDate(edu.graduation_date);
+                                    return grad ? (
+                                        <span className="text-sm text-gray-500">
+                                            {grad}
+                                        </span>
+                                    ) : null;
+                                })()}
                             </div>
                         ))}
                     </div>

@@ -8,13 +8,14 @@ import {
   UploadCloudIcon,
   XIcon,
 } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import api from "../configs/api";
 import pdfToText from "react-pdftotext";
+import { motion as Motion } from "framer-motion";
 
 const Dashboard = () => {
   const { token } = useSelector((state) => state.auth);
@@ -28,7 +29,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const loadAllResumes = async () => {
+  const loadAllResumes = useCallback(async () => {
     try {
       const { data } = await api.get("/api/users/resumes", {
         headers: {
@@ -39,7 +40,7 @@ const Dashboard = () => {
     } catch (error) {
       toast.error(error?.response?.data?.message || error.message);
     }
-  };
+  }, [token]);
 
   const createResume = async (e) => {
     try {
@@ -132,7 +133,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadAllResumes();
-  }, []);
+  }, [loadAllResumes]);
   return (
     <div>
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -140,7 +141,9 @@ const Dashboard = () => {
           Welcome, John Doe
         </p>
         <div className="flex gap-4">
-          <button
+          <Motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setShowCreateResumes(true)}
             className="w-full bg-white sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-slate-600 border border-dashed border-slate-300 group hover:border-indigo-500 hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
@@ -148,24 +151,35 @@ const Dashboard = () => {
             <p className="text-sm group-hover:text-indigo-600 transition-all duration-300">
               Create Resume
             </p>
-          </button>
-          <button
+          </Motion.button>
+          <Motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setShowUploadResumes(true)}
-            className="w-full bg-white sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-slate-600 border border-dashed border-slate-300 group hover:border-purplexw-500 hover:shadow-lg transition-all duration-300 cursor-pointer"
+            className="w-full bg-white sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-slate-600 border border-dashed border-slate-300 group hover:border-purple-500 hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
             <UploadCloudIcon className="size-11 transition-all duration-300 p-2.5 bg-gradient-to-br from-purple-300 to-purple-500 text-white rounded-full" />
             <p className="text-sm group-hover:text-purple-600 transition-all duration-300">
               Upload Existing
             </p>
-          </button>
+          </Motion.button>
         </div>
         <hr className="border-slate-300 my-6 sm:w-[305px]" />
 
-        <div className="grid grid-col-2 sm:flex flex-wrap gap-4">
+        <Motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.1 }}
+          className="grid grid-col-2 sm:flex flex-wrap gap-4"
+        >
           {allResumes.map((resume, index) => {
             const baseColor = colors[index % colors.length];
             return (
-              <button
+              <Motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => navigate(`/app/builder/${resume._id}`)}
                 key={index}
                 className="relative w-full sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 border group hover:shadow-lg transition-all duration-300 cursor-pointer"
@@ -206,10 +220,10 @@ const Dashboard = () => {
                     className="size-7 p-1.5 hover:bg-white/50 rounded text-slate-700 transition-colors"
                   />
                 </div>
-              </button>
+              </Motion.button>
             );
           })}
-        </div>
+        </Motion.div>
 
         <div>
           {showCreateResumes && (
@@ -228,10 +242,10 @@ const Dashboard = () => {
                   value={title}
                   type="text"
                   placeholder="Enter resume title"
-                  className="w-full px-4 py-2 mb-4 focus:border-green-600 ring-green-600"
+                  className="w-full px-4 py-2 mb-4 focus:border-indigo-600 ring-indigo-600"
                   required
                 />
-                <button className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                <button className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
                   Create Resume
                 </button>
                 <XIcon
@@ -261,7 +275,7 @@ const Dashboard = () => {
                   value={title}
                   type="text"
                   placeholder="Enter resume title"
-                  className="w-full px-4 py-2 mb-4 focus:border-green-600 ring-green-600"
+                  className="w-full px-4 py-2 mb-4 focus:border-indigo-600 ring-indigo-600"
                   required
                 />
                 <div>
@@ -269,9 +283,9 @@ const Dashboard = () => {
                     htmlFor="resume-input"
                     className="block text-sm text-slate-700"
                   >
-                    <div className="flex flex-col items-center justify-center gap-2 border group text-slate-400 border-slate-400 border-dahsed rounded-md p-4 py-10 my-4 hover:border-green-500 hover:text-green-700 cursor-pointer transition-colors">
+                    <div className="flex flex-col items-center justify-center gap-2 border group text-slate-400 border-slate-400 border-dahsed rounded-md p-4 py-10 my-4 hover:border-indigo-500 hover:text-indigo-700 cursor-pointer transition-colors">
                       {resume ? (
-                        <p className="text-green-700">{resume.name}</p>
+                        <p className="text-indigo-700">{resume.name}</p>
                       ) : (
                         <>
                           <UploadCloud className="size-14 stroke-1" />
@@ -290,7 +304,7 @@ const Dashboard = () => {
                 </div>
                 <button
                   disabled={isLoading}
-                  className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
                 >
                   {isLoading && (
                     <LoaderCircleIcon className="animate-spin size-4 text-white" />
@@ -323,10 +337,10 @@ const Dashboard = () => {
                   value={title}
                   type="text"
                   placeholder="Enter resume title"
-                  className="w-full px-4 py-2 mb-4 focus:border-green-600 ring-green-600"
+                  className="w-full px-4 py-2 mb-4 focus:border-indigo-600 ring-indigo-600"
                   required
                 />
-                <button className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                <button className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">
                   Update
                 </button>
                 <XIcon

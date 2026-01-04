@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeftIcon,
@@ -46,7 +46,7 @@ const ResumeBuilder = () => {
     public: false,
   });
 
-  const loadExistingResume = async () => {
+  const loadExistingResume = useCallback(async () => {
     try {
       const { data } = await api.get("/api/resumes/get/" + resumeId, {
         headers: {
@@ -57,6 +57,15 @@ const ResumeBuilder = () => {
       if (data.resume) {
         const r = data.resume;
         preventAutoSave.current = true;
+        const normalizedEducation = Array.isArray(r.education)
+          ? r.education.map((e) => {
+              if (!e?.institution && e?.company) {
+                const { company, ...rest } = e;
+                return { institution: company, ...rest };
+              }
+              return e;
+            })
+          : [];
         setResumeData({
           _id: r._id || "",
           title: r.title || "",
@@ -66,11 +75,11 @@ const ResumeBuilder = () => {
               ? r.professional_summary
               : "",
           experience: Array.isArray(r.experience) ? r.experience : [],
-          education: Array.isArray(r.education) ? r.education : [],
+          education: normalizedEducation,
           project: Array.isArray(r.project) ? r.project : [],
           skills: Array.isArray(r.skills) ? r.skills : [],
           template: r.template || "classic",
-          accent_color: r.accent_color || "#3B82F6",
+          accent_color: r.accent_color || "#6366F1",
           public: r.public ?? false,
         });
 
@@ -79,11 +88,13 @@ const ResumeBuilder = () => {
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }, [resumeId, token]);
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
   const preventAutoSave = useRef(true);
+  const [showShare, setShowShare] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
 
   const sections = [
     {
@@ -95,6 +106,11 @@ const ResumeBuilder = () => {
       id: "summary",
       name: "Summary",
       icon: FileText,
+    },
+    {
+      id: "skills",
+      name: "Skills",
+      icon: Sparkles,
     },
     {
       id: "experience",
@@ -111,11 +127,6 @@ const ResumeBuilder = () => {
       name: "Projects",
       icon: FolderIcon,
     },
-    {
-      id: "skills",
-      name: "Skills",
-      icon: Sparkles,
-    },
   ];
 
   const activeSection = sections[activeSectionIndex];
@@ -124,51 +135,46 @@ const ResumeBuilder = () => {
     if (resumeId) {
       loadExistingResume();
     }
-  }, [resumeId]);
+  }, [resumeId, loadExistingResume]);
 
-  const saveResume = async (payload) => {
+  const changeResumeVisibility = async () => {
     try {
-      const currentData = payload || resumeData;
+      const nextPublic = !resumeData.public;
       const formData = new FormData();
       formData.append("resumeId", resumeId);
-      formData.append("removeBackground", removeBackground ? "true" : "false");
-      const dataToSend = { ...currentData };
-      if (
-        dataToSend.personal_info &&
-        typeof dataToSend.personal_info.image === "object"
-      ) {
-        formData.append("image", dataToSend.personal_info.image);
-        dataToSend.personal_info = { ...dataToSend.personal_info };
-        delete dataToSend.personal_info.image;
-      }
-      formData.append("resumeData", JSON.stringify(dataToSend));
-      const { data } = await api.put("/api/resumes/update", formData, {
+      formData.append("resumeData", JSON.stringify({ public: nextPublic }));
+      await api.put("/api/resumes/update", formData, {
         headers: {
           Authorization: token,
           "Content-Type": "multipart/form-data",
         },
       });
-      if (data.resume) {
-        setResumeData(data.resume);
-        toast.success(data.message || "Saved Successfully");
-      }
+      setResumeData({ ...resumeData, public: nextPublic });
+      toast.success(
+        nextPublic ? "Visibility set to Public" : "Visibility set to Private"
+      );
     } catch (error) {
-      toast.error(error?.response?.data?.message || error.message);
+      console.error("Error saving Resume:", error);
     }
   };
 
-  const changeResumeVisibility = async () => {
-    const updated = { ...resumeData, public: !resumeData.public };
-    preventAutoSave.current = true;
-    setResumeData(updated);
-    await saveResume(updated);
-  };
-
   const enhanceSummary = async () => {
+    const summary = resumeData.professional_summary;
+    const profession = resumeData.personal_info?.profession;
+
+    if (!summary?.trim() && !profession?.trim()) {
+      toast.error("Please enter a profession or write a draft summary first.");
+      return;
+    }
+
     try {
       const { data } = await api.post(
         "/api/ai/enhance-pro-sum",
-        { userContent: resumeData.professional_summary },
+        {
+          userContent:
+            summary?.trim() ||
+            `Write a professional summary for a ${profession}`,
+        },
         { headers: { Authorization: token } }
       );
       if (data.enhancedContent) {
@@ -183,26 +189,61 @@ const ResumeBuilder = () => {
     }
   };
 
+  const saveResume = useCallback(
+    async (payload, silent = false) => {
+      try {
+        const currentData = payload || resumeData;
+        let updatedResumeData = structuredClone(currentData);
+
+        if (
+          updatedResumeData.personal_info &&
+          typeof updatedResumeData.personal_info.image === "object"
+        ) {
+          delete updatedResumeData.personal_info.image;
+        }
+
+        const formData = new FormData();
+        formData.append("resumeId", resumeId);
+        formData.append("resumeData", JSON.stringify(updatedResumeData));
+        removeBackground && formData.append("removeBackground", "yes");
+        typeof currentData.personal_info?.image === "object" &&
+          formData.append("image", currentData.personal_info.image);
+
+        const { data } = await api.put("/api/resumes/update", formData, {
+          headers: { Authorization: token },
+        });
+        if (!silent) {
+          preventAutoSave.current = true;
+          setResumeData(data.resume);
+          toast.success(data.message || "Saved Successfully");
+        }
+        return data;
+      } catch (error) {
+        if (!silent) {
+          toast.error(error?.response?.data?.message || error.message);
+        }
+        throw error;
+      }
+    },
+    [resumeId, token, removeBackground, resumeData]
+  );
+
   useEffect(() => {
     if (preventAutoSave.current) {
       preventAutoSave.current = false;
       return;
     }
     const t = setTimeout(() => {
-      saveResume();
+      saveResume(null, true);
     }, 800);
     return () => clearTimeout(t);
-  }, [resumeData]);
+  }, [resumeData, saveResume]);
 
   const handleShare = () => {
     const frontendUrl = window.location.href.split("/app/")[0];
     const resumeUrl = frontendUrl + "/view/" + resumeId;
-
-    if (navigator.share) {
-      navigator.share({ url: resumeUrl, text: "My Resume" });
-    } else {
-      alert("Share not supported on this browser.");
-    }
+    setShareUrl(resumeUrl);
+    setShowShare(true);
   };
 
   const downloadResume = () => {
@@ -229,7 +270,7 @@ const ResumeBuilder = () => {
               <div className="relative h-1 mb-6">
                 <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
                 <hr
-                  className="absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-700 rounded-full"
+                  className="absolute top-0 left-0 h-1 bg-gradient-to-r from-indigo-500 to-indigo-600 border-none transition-all duration-700 rounded-full"
                   style={{
                     width: `${
                       (activeSectionIndex * 100) / (sections.length - 1)
@@ -370,8 +411,10 @@ const ResumeBuilder = () => {
               </div>
 
               <button
-                onClick={() => saveResume()}
-                className="bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm"
+                onClick={() => {
+                  saveResume();
+                }}
+                className="bg-gradient-to-br from-indigo-100 to-indigo-200 ring-indigo-300 text-indigo-600 ring hover:ring-indigo-400 transition-all rounded-md px-6 py-2 mt-6 text-sm"
               >
                 Save Changes
               </button>
@@ -380,7 +423,7 @@ const ResumeBuilder = () => {
 
           {/* right panel - Preview */}
           <div className="lg:col-span-7 max-lg:mt-6">
-            <div className="relative w-full">
+            <div className="relative w-full pb-14">
               {/* buttons */}
               <div className="absolute bottom-3 left-0 right-0 flex items-center justify-end gap-2">
                 {resumeData.public && (
@@ -406,7 +449,7 @@ const ResumeBuilder = () => {
 
                 <button
                   onClick={downloadResume}
-                  className="flex items-center py-2 px-6 gap-2 text-xs bg-gradient-to-br from-green-100 to-green-200 text-green-600 rounded-lg ring-green-300 hover:ring transition-colors"
+                  className="flex items-center py-2 px-6 gap-2 text-xs bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-600 rounded-lg ring-indigo-300 hover:ring transition-colors"
                 >
                   <DownloadIcon className="size-4" /> Download
                 </button>
@@ -422,6 +465,52 @@ const ResumeBuilder = () => {
           </div>
         </div>
       </div>
+      {showShare && (
+        <div
+          onClick={() => setShowShare(false)}
+          className="fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-20 flex items-center justify-center"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white border shadow-md rounded-lg w-full max-w-sm p-6"
+          >
+            <h2 className="text-xl font-bold mb-3">Share Resume</h2>
+            <p className="text-sm text-gray-600 mb-2">
+              Copy and share this public link:
+            </p>
+            <div className="flex items-center gap-2">
+              <input
+                value={shareUrl}
+                readOnly
+                className="flex-1 px-3 py-2 text-sm border rounded"
+              />
+              <button
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    toast.success("Link copied");
+                  } catch {
+                    toast.error("Copy failed");
+                  }
+                }}
+                className="px-3 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Copy
+              </button>
+            </div>
+            <div className="flex justify-end mt-4">
+              <a
+                href={shareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Open Link
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,26 @@
 import { Briefcase, Plus, Sparkles, Trash2 } from "lucide-react";
 import React from "react";
+import api from "../configs/api";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const ExperienceForm = ({ data, onChange }) => {
+  const { token } = useSelector((state) => state.auth);
+  const [loadingIndex, setLoadingIndex] = React.useState(null);
+  const sanitizeDescription = (text) => {
+    const lines = String(text)
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0)
+      .map((l) =>
+        l
+          .replace(/^\s*(?:[-*••]|[0-9]+[.)]|[a-zA-Z][.)]|–|—)\s+/, "")
+          .replace(/\s+/g, " ")
+          .trim()
+      );
+    return lines.join("\n");
+  };
+
   const addExperience = () => {
     const newExperience = {
       company: "",
@@ -23,6 +42,43 @@ const ExperienceForm = ({ data, onChange }) => {
     updated[index] = { ...updated[index], [field]: value };
     onChange(updated);
   };
+  const enhanceDescription = async (index) => {
+    if (loadingIndex !== null) return;
+    const exp = data[index] || {};
+    const desc = (exp.description || "").trim();
+    const position = (exp.position || "").trim();
+    const company = (exp.company || "").trim();
+    if (!desc && !position) {
+      toast.error("Please add a job title or write a draft description first.");
+      return;
+    }
+    try {
+      setLoadingIndex(index);
+      const { data: resp } = await api.post(
+        "/api/ai/enhance-job-desc",
+        {
+          userContent:
+            desc ||
+            `Write a concise, achievement-focused job description for a ${position}${
+              company ? " at " + company : ""
+            }. Use 1–2 ATS-friendly sentences.`,
+        },
+        { headers: { Authorization: token } }
+      );
+      if (resp.enhancedContent) {
+        updateExperience(
+          index,
+          "description",
+          sanitizeDescription(resp.enhancedContent)
+        );
+        toast.success("Description enhanced");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    } finally {
+      setLoadingIndex(null);
+    }
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -34,7 +90,7 @@ const ExperienceForm = ({ data, onChange }) => {
         </div>
         <button
           onClick={addExperience}
-          className="flex items-center gap-2 px-3 py-1 text-sm bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors"
+          className="flex items-center gap-2 px-3 py-1 text-sm bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg transition-colors"
         >
           <Plus className="size-4" />
           Add Experience
@@ -123,16 +179,35 @@ const ExperienceForm = ({ data, onChange }) => {
                   <label className="text-sm font-medium text-gray-700">
                     Job Description
                   </label>
-                  <button className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50">
-                    <Sparkles className="w-3 h-1" />
-                    Enhance With AI
+                  <button
+                    onClick={() => enhanceDescription(index)}
+                    disabled={loadingIndex === index}
+                    className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    {loadingIndex === index
+                      ? "Enhancing..."
+                      : "Enhance With AI"}
                   </button>
                 </div>
                 <textarea
                   value={experience.description || ""}
                   onChange={(e) =>
-                    updateExperience(index, "description", e.target.value)
+                    updateExperience(
+                      index,
+                      "description",
+                      sanitizeDescription(e.target.value)
+                    )
                   }
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const text = e.clipboardData.getData("text/plain");
+                    updateExperience(
+                      index,
+                      "description",
+                      sanitizeDescription(text)
+                    );
+                  }}
                   rows={4}
                   className="w-full text-sm px-3 py-2 rounded-lg resize-none"
                   placeholder="Describe your key responsibilities and achievements..."

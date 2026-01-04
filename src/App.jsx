@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./pages/Layout";
 import Dashboard from "./pages/Dashboard";
@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const getUserData = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -36,6 +37,19 @@ const App = () => {
   useEffect(() => {
     getUserData();
   }, []);
+  useEffect(() => {
+    const id = "G-HF1VRJ6D7P";
+    const url = window.location.href;
+    const title = document.title || "Resume Builder";
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "page_view", {
+        page_location: url,
+        page_title: title,
+        page_path: location.pathname + location.search,
+        send_to: id,
+      });
+    }
+  }, [location.pathname, location.search]);
   return (
     <>
       <Toaster />

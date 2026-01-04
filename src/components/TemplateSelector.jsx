@@ -27,6 +27,26 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
       name: "Minimal",
       preview: "Ultra-clean design that puts your content front and center",
     },
+    {
+      id: "sidebar",
+      name: "Sidebar",
+      preview: "Left sidebar layout with contact, skills, and education",
+    },
+    {
+      id: "split",
+      name: "Split",
+      preview: "Two-column header with modern section layout",
+    },
+    {
+      id: "timeline",
+      name: "Timeline",
+      preview: "Vertical timeline for experience with bold accents",
+    },
+    {
+      id: "card",
+      name: "Card",
+      preview: "Section cards and chips with subtle shadows",
+    },
   ];
 
   return (
@@ -39,7 +59,7 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full w-xs p-3 mt-2 space-y-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm">
+        <div className="absolute top-full left-0 sm:left-auto sm:right-0 min-w-[16rem] w-[calc(100vw-2rem)] sm:w-72 p-3 mt-2 space-y-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm">
           {templates.map((template) => (
             <div
               key={template.id}

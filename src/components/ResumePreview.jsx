@@ -3,6 +3,10 @@ import ClassicTemplate from "./templates/ClassicTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalImageTemplate from "./templates/MinimalImageTemplate";
+import SidebarTemplate from "./templates/SidebarTemplate";
+import SplitTemplate from "./templates/SplitTemplate";
+import TimelineTemplate from "./templates/TimelineTemplate";
+import CardTemplate from "./templates/CardTemplate";
 
 const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
   const renderTemplate = () => {
@@ -13,22 +17,31 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
         return <MinimalTemplate data={data} accentColor={accentColor} />;
       case "minimal-image":
         return <MinimalImageTemplate data={data} accentColor={accentColor} />;
+      case "sidebar":
+        return <SidebarTemplate data={data} accentColor={accentColor} />;
+      case "split":
+        return <SplitTemplate data={data} accentColor={accentColor} />;
+      case "timeline":
+        return <TimelineTemplate data={data} accentColor={accentColor} />;
+      case "card":
+        return <CardTemplate data={data} accentColor={accentColor} />;
 
       default:
         return <ClassicTemplate data={data} accentColor={accentColor} />;
     }
   };
   return (
-    <div className="w-full bg-gray-100">
+    <div className="w-full bg-gray-100 overflow-x-auto">
       <div
         id="resume-preview"
         className={
-          "border border-gray-200 print:shadow-none print:border-none" + classes
+          "border border-gray-200 print:shadow-none print:border-none bg-white max-w-[900px] mx-auto sm:rounded-lg" +
+          (classes ? " " + classes : "")
         }
       >
         {renderTemplate()}
       </div>
-      <style jsx>
+      <style>
         {`
           @page {
             size: letter;

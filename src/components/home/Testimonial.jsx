@@ -1,6 +1,7 @@
 import React from "react";
 import Title from "./Title";
 import { BookUserIcon } from "lucide-react";
+import { motion as Motion } from "framer-motion";
 
 const Testimonial = () => {
   const cardsData = [
@@ -50,7 +51,7 @@ const Testimonial = () => {
           <div className="flex items-center gap-1">
             <p>{card.name}</p>
             <svg
-              className="mt-0.5 fill-green-500"
+              className="mt-0.5 fill-indigo-500"
               width="12"
               height="12"
               viewBox="0 0 12 12"
@@ -72,19 +73,23 @@ const Testimonial = () => {
 
   return (
     <>
-      <div
+      <Motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
         id="testimonials"
         className="flex flex-col items-center my-10 scroll-mt-12"
       >
-        <div className="flex items-center gap-2 text-sm text-green-600 bg-green-400/10 rounded-full px-6 py-1.5">
-          <BookUserIcon className="size-4.5 stroke-green-600" />
+        <div className="flex items-center gap-2 text-sm text-indigo-600 bg-indigo-400/10 rounded-full px-6 py-1.5">
+          <BookUserIcon className="size-4.5 stroke-indigo-600" />
           <span>Testimonials</span>
         </div>
         <Title
           title="Don't just take our words"
           description="Hear what our users say about us. We're always looking for ways to improve. If you have a positive experience with us, leave a review"
         />
-      </div>
+      </Motion.div>
       <div className="marquee-row w-full mx-auto max-w-5xl overflow-hidden relative">
         <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white to-transparent"></div>
         <div className="marquee-inner flex transform-gpu min-w-[200%] pt-10 pb-5">

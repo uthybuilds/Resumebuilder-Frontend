@@ -1,6 +1,7 @@
 import React from "react";
 import { Zap } from "lucide-react";
 import Title from "./Title";
+import { motion as Motion } from "framer-motion";
 
 const Features = () => {
   const [isHover, setIsHover] = React.useState(false);
@@ -9,7 +10,7 @@ const Features = () => {
       id="features"
       className="flex flex-col items-center my-10 scroll-mt-12"
     >
-      <div className="flex items-center gap-2 text-sm text-green-600 bg-green-400/10 rounded-full px-6 py-1.5">
+      <div className="flex items-center gap-2 text-sm text-indigo-600 bg-indigo-400/10 rounded-full px-6 py-1.5">
         <Zap width={14} />
         <span>Simple Process</span>
       </div>
@@ -18,7 +19,11 @@ const Features = () => {
         description="Our streamlined process helps you create a professional resume in minutes with intelligent AI-powered tools and features"
       />
       <div className="flex flex-col md:flex-row items-center xl:-mt-10 justify-center">
-        <img
+        <Motion.img
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
           className="max-w-2xl w-full xl:-ml-32"
           src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/features/group-image-1.png"
           alt=""
@@ -28,7 +33,11 @@ const Features = () => {
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >
-          <div
+          <Motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
             className={
               "flex items-center justify-center gap-6 max-w-md group cursor-pointer"
             }
@@ -63,9 +72,15 @@ const Features = () => {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="flex items-center justify-center gap-6 max-w-md group cursor-pointer">
-            <div className="p-6 group-hover:bg-green-100 border border-transparent group-hover:border-green-300 flex gap-4 rounded-xl transition-colors">
+          </Motion.div>
+          <Motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center gap-6 max-w-md group cursor-pointer"
+          >
+            <div className="p-6 group-hover:bg-indigo-100 border border-transparent group-hover:border-indigo-300 flex gap-4 rounded-xl transition-colors">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -76,7 +91,7 @@ const Features = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="size-6 stroke-green-600"
+                className="size-6 stroke-indigo-600"
               >
                 <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
@@ -91,8 +106,14 @@ const Features = () => {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="flex items-center justify-center gap-6 max-w-md group cursor-pointer">
+          </Motion.div>
+          <Motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center gap-6 max-w-md group cursor-pointer"
+          >
             <div className="p-6 group-hover:bg-orange-100 border border-transparent group-hover:border-orange-300 flex gap-4 rounded-xl transition-colors">
               <svg
                 className="size-6 stroke-orange-600"
@@ -119,7 +140,7 @@ const Features = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </Motion.div>
         </div>
       </div>
       <style>{`
