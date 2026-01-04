@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
@@ -9,6 +9,43 @@ import TimelineTemplate from "./templates/TimelineTemplate";
 import CardTemplate from "./templates/CardTemplate";
 
 const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
+  const containerRef = useRef(null);
+  const contentRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const parentWidth = containerRef.current.offsetWidth;
+      const targetWidth = 800; // Approx A4 width
+      const newScale = Math.min(parentWidth / targetWidth, 1);
+      
+      setScale(newScale);
+      
+      if (contentRef.current) {
+        setHeight(contentRef.current.scrollHeight * newScale);
+      }
+    };
+
+    // Initial calculation
+    handleResize();
+
+    // Use ResizeObserver for more robust sizing
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
+    if (contentRef.current) resizeObserver.observe(contentRef.current);
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
+    };
+  }, [data, template]);
+
   const renderTemplate = () => {
     switch (template) {
       case "modern":
@@ -31,11 +68,21 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
     }
   };
   return (
-    <div className="w-full bg-gray-100 overflow-x-auto">
+    <div 
+      className="w-full bg-gray-100 overflow-hidden relative" 
+      ref={containerRef}
+      style={{ height: height ? `${height}px` : 'auto' }}
+    >
       <div
+        ref={contentRef}
         id="resume-preview"
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          width: '800px', // Fixed width for consistent rendering
+        }}
         className={
-          "border border-gray-200 print:shadow-none print:border-none bg-white max-w-[900px] mx-auto sm:rounded-lg" +
+          "border border-gray-200 print:shadow-none print:border-none bg-white absolute top-0 left-0" +
           (classes ? " " + classes : "")
         }
       >
@@ -65,12 +112,13 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
               position: absolute;
               left: 0;
               top: 0;
-              width: 100%;
+              width: 100% !important;
               height: auto;
               margin: 0;
               padding: 0;
               box-shadow: none !important;
               border: none !important;
+              transform: none !important;
             }
           }
         `}

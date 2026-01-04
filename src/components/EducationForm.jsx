@@ -177,6 +177,7 @@ const EducationForm = ({ data, onChange }) => {
         new Set([
           ...(ng.data?.suggestions || []),
           ...(gl.data?.suggestions || []),
+          ...NIGERIA_SEED,
         ])
       );
       if (merged.length === 0) merged = NIGERIA_SEED;

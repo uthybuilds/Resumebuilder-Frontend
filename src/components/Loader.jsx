@@ -1,9 +1,10 @@
 import React from "react";
+import Logo from "../assets/logo.svg";
 
-const Loader = () => {
+const Loader = ({ className = "h-screen" }) => {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="size-12 border-3 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+    <div className={`flex justify-center items-center ${className} w-full`}>
+      <img src={Logo} alt="Loading..." className="h-16 animate-bounce" />
     </div>
   );
 };

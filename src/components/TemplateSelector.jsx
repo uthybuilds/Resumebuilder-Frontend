@@ -59,7 +59,7 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 sm:left-auto sm:right-0 min-w-[16rem] w-[calc(100vw-2rem)] sm:w-72 p-3 mt-2 space-y-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm">
+        <div className="absolute top-full left-0 sm:left-auto sm:right-0 min-w-[16rem] w-[calc(100vw-2rem)] sm:w-72 p-3 mt-2 space-y-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm max-h-[80vh] overflow-y-auto">
           {templates.map((template) => (
             <div
               key={template.id}

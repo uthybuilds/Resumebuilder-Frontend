@@ -17,6 +17,8 @@ import api from "../configs/api";
 import pdfToText from "react-pdftotext";
 import { motion as Motion } from "framer-motion";
 
+import LogoIcon from "../components/LogoIcon";
+
 const Dashboard = () => {
   const { token } = useSelector((state) => state.auth);
   const colors = ["#9333ea", "#d97706", "#dc2626", "#0284c7", "#16a34a"];
