@@ -17,10 +17,12 @@ import { Toaster } from "react-hot-toast";
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const getUserData = async () => {
+  const getUserData = React.useCallback(async () => {
     try {
       await api.get("/");
-    } catch {}
+    } catch (e) {
+      console.debug("warmup failed", e);
+    }
     const token = localStorage.getItem("token");
     try {
       if (token) {
@@ -38,11 +40,11 @@ const App = () => {
       dispatch(setLoading(false));
       console.log(error.message);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [getUserData]);
   useEffect(() => {
     const id = "G-HF1VRJ6D7P";
     const url = window.location.href;

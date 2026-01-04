@@ -19,10 +19,12 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       if (!containerRef.current) return;
       const parentWidth = containerRef.current.offsetWidth;
       const targetWidth = 800; // Approx A4 width
-      const newScale = Math.min(parentWidth / targetWidth, 1);
-      
+      const padding = 24; // keep some breathing space
+      const available = Math.max(parentWidth - padding, 0);
+      const newScale = Math.min(available / targetWidth, 1.15);
+
       setScale(newScale);
-      
+
       if (contentRef.current) {
         setHeight(contentRef.current.scrollHeight * newScale);
       }
@@ -68,21 +70,22 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
     }
   };
   return (
-    <div 
-      className="w-full bg-gray-100 overflow-hidden relative" 
+    <div
+      className="w-full bg-gray-100 overflow-hidden relative"
       ref={containerRef}
-      style={{ height: height ? `${height}px` : 'auto' }}
+      style={{ height: height ? `${height}px` : "auto" }}
     >
       <div
         ref={contentRef}
         id="resume-preview"
         style={{
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
-          width: '800px', // Fixed width for consistent rendering
+          transform: `translateX(-50%) scale(${scale})`,
+          transformOrigin: "top center",
+          width: "800px", // Fixed width for consistent rendering
+          left: "50%",
         }}
         className={
-          "border border-gray-200 print:shadow-none print:border-none bg-white absolute top-0 left-0" +
+          "border border-gray-200 print:shadow-none print:border-none bg-white absolute top-0" +
           (classes ? " " + classes : "")
         }
       >

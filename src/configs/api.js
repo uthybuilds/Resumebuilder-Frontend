@@ -10,7 +10,9 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 const pingBackend = async () => {
   try {
     await axios.get(baseURL + "/");
-  } catch {}
+  } catch (e) {
+    console.debug("ping failed", e);
+  }
 };
 
 let warmed = false;
