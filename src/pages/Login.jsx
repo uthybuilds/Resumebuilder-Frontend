@@ -21,6 +21,11 @@ const Login = () => {
     password: "",
   });
 
+  React.useEffect(() => {
+    setFormData({ name: "", email: "", password: "" });
+    setShowPassword(false);
+  }, [state]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -30,6 +35,8 @@ const Login = () => {
         dispatch(login(data));
         if (data.token) localStorage.setItem("token", data.token);
         toast.success(data.message);
+        setFormData({ name: "", email: "", password: "" });
+        setShowPassword(false);
         navigate("/app");
         return;
       } else {
@@ -37,6 +44,8 @@ const Login = () => {
         if (url) {
           toast.success("Redirecting to verification...");
           await new Promise((r) => setTimeout(r, 2000));
+          setFormData({ name: "", email: "", password: "" });
+          setShowPassword(false);
           window.location.href = url;
           return;
         }
@@ -58,6 +67,7 @@ const Login = () => {
       <form
         onSubmit={handleSubmit}
         className="sm:w-[350px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white"
+        autoComplete="off"
       >
         <h1 className="text-gray-900 text-3xl mt-10 font-medium">
           {state === "login" ? "Login" : "Sign up"}
@@ -74,6 +84,7 @@ const Login = () => {
               value={formData.name}
               onChange={handleChange}
               required
+              autoComplete="name"
             />
           </div>
         )}
@@ -87,6 +98,7 @@ const Login = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            autoComplete="email"
           />
         </div>
         <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden px-6 gap-2">
@@ -99,6 +111,7 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            autoComplete="new-password"
           />
           <button
             type="button"
