@@ -25,8 +25,16 @@ const Login = () => {
     setIsLoading(true);
     try {
       const { data } = await api.post(`/api/users/${state}`, formData);
-      dispatch(login(data));
-      localStorage.setItem("token", data.token);
+      if (state === "login") {
+        dispatch(login(data));
+        if (data.token) localStorage.setItem("token", data.token);
+      } else {
+        if (data?.verifyUrl) {
+          toast.success(data.message || "Redirecting to verify...");
+          window.location.href = data.verifyUrl;
+          return;
+        }
+      }
       toast.success(data.message);
     } catch (error) {
       toast(error?.response?.data?.message || error.message);
