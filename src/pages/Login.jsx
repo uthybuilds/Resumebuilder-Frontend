@@ -98,9 +98,9 @@ const Login = () => {
           </button>
         </div>
         <div className="mt-4 text-left text-indigo-500">
-          <button className="text-sm" type="reset">
-            Forget password?
-          </button>
+          <a href="/forgot-password" class="text-sm">
+            Forgot password?
+          </a>
         </div>
         <button
           type="submit"
@@ -110,10 +110,14 @@ const Login = () => {
           {isLoading ? (
             <>
               <Loader2 className="animate-spin" size={20} />
-              <span>{state === "login" ? "Logging in..." : "Signing up..."}</span>
+              <span>
+                {state === "login" ? "Logging in..." : "Signing up..."}
+              </span>
             </>
+          ) : state === "login" ? (
+            "Login"
           ) : (
-            state === "login" ? "Login" : "Sign up"
+            "Sign up"
           )}
         </button>
         <p
