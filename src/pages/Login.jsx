@@ -4,10 +4,11 @@ import api from "../configs/api.js";
 import { useDispatch } from "react-redux";
 import { login } from "../app/features/authSlice";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const query = new URLSearchParams(window.location.search);
   const urlState = query.get("state");
   const [state, setState] = React.useState(urlState || "login");
@@ -28,6 +29,9 @@ const Login = () => {
       if (state === "login") {
         dispatch(login(data));
         if (data.token) localStorage.setItem("token", data.token);
+        toast.success(data.message);
+        navigate("/app");
+        return;
       } else {
         const url = data?.verifyUrl;
         if (url) {
