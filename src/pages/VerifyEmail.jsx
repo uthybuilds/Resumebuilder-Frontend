@@ -14,8 +14,7 @@ const VerifyEmail = () => {
       try {
         await api.post("/api/users/verify-email", { token });
         setStatus("success");
-        toast.success("Email verified successfully");
-        setTimeout(() => navigate("/auth?state=login"), 3000);
+        toast.success("Account created, please login");
       } catch (error) {
         setStatus("error");
         toast.error(error?.response?.data?.message || "Verification failed");
@@ -25,7 +24,7 @@ const VerifyEmail = () => {
     if (token) {
       verify();
     }
-  }, [token, navigate]);
+  }, [token]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -36,22 +35,29 @@ const VerifyEmail = () => {
             <h2 className="text-xl font-semibold text-gray-900">
               Verifying your email...
             </h2>
-            <p className="text-gray-500">Please wait while we verify your token.</p>
+            <p className="text-gray-500">
+              Please wait while we verify your token.
+            </p>
           </div>
         )}
 
         {status === "success" && (
-          <div className="flex flex-col items-center gap-4">
-            <CheckCircle2 className="w-16 h-16 text-green-500" />
-            <h2 className="text-2xl font-bold text-gray-900">Verified!</h2>
-            <p className="text-gray-500">
-              Your email has been verified successfully. Redirecting to login...
+          <div className="flex flex-col items-center gap-5">
+            <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Account created
+            </h2>
+            <p className="text-gray-600 text-sm max-w-sm">
+              Your email has been verified successfully. Please login to
+              continue.
             </p>
             <button
               onClick={() => navigate("/auth?state=login")}
-              className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors"
+              className="mt-2 w-full max-w-xs px-6 py-2.5 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors"
             >
-              Go to Login
+              Login
             </button>
           </div>
         )}
@@ -59,7 +65,9 @@ const VerifyEmail = () => {
         {status === "error" && (
           <div className="flex flex-col items-center gap-4">
             <XCircle className="w-16 h-16 text-red-500" />
-            <h2 className="text-2xl font-bold text-gray-900">Verification Failed</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Verification Failed
+            </h2>
             <p className="text-gray-500">
               The verification link is invalid or has expired.
             </p>
