@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const baseURL =
-  import.meta.env.VITE_BASE_URL ||
-  (import.meta.env.PROD
-    ? "https://resumebuilder-backend-sh0z.onrender.com"
-    : "http://localhost:3000");
+const baseURL = import.meta.env.PROD
+  ? "https://resumebuilder-backend-sh0z.onrender.com"
+  : import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
 const api = axios.create({ baseURL, timeout: 15000 });
 
