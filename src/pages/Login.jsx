@@ -1,10 +1,9 @@
-import { Eye, EyeOff, Lock, Mail, User2Icon } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, User2Icon } from "lucide-react";
 import React from "react";
 import api from "../configs/api.js";
 import { useDispatch } from "react-redux";
 import { login } from "../app/features/authSlice";
 import toast from "react-hot-toast";
-import LogoIcon from "../components/LogoIcon";
 
 const Login = () => {
   const dispatch = useDispatch();
