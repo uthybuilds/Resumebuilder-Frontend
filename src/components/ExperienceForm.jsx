@@ -127,7 +127,7 @@ const ExperienceForm = ({ data, onChange }) => {
                     updateExperience(index, "company", e.target.value)
                   }
                   placeholder="Company name"
-                  className="px-3 py-2 text-sm rounded-lg"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
@@ -136,7 +136,7 @@ const ExperienceForm = ({ data, onChange }) => {
                     updateExperience(index, "position", e.target.value)
                   }
                   placeholder="Job Title"
-                  className="px-3 py-2 text-sm rounded-lg"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="month"
@@ -144,7 +144,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   onChange={(e) =>
                     updateExperience(index, "start_date", e.target.value)
                   }
-                  className="px-3 py-2 text-sm rounded-lg"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="month"
@@ -153,7 +153,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   onChange={(e) =>
                     updateExperience(index, "end_date", e.target.value)
                   }
-                  className="px-3 py-2 text-sm rounded-lg disabled:bg-gray-100"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
                 />
               </div>
 
@@ -209,7 +209,7 @@ const ExperienceForm = ({ data, onChange }) => {
                     );
                   }}
                   rows={4}
-                  className="w-full text-sm px-3 py-2 rounded-lg resize-none"
+                  className="w-full text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   placeholder="Describe your key responsibilities and achievements..."
                 />
               </div>

@@ -228,6 +228,7 @@ const EducationForm = ({ data, onChange }) => {
     }
   };
   const applySuggestion = (index, name) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     updateEducation(index, "institution", name);
     setSuggestions([]);
     setHasSearched(false);
@@ -275,31 +276,31 @@ const EducationForm = ({ data, onChange }) => {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    type="text"
-                    value={education.institution || ""}
-                    onChange={(e) =>
-                      handleInstitutionChange(index, e.target.value)
-                    }
-                    onFocus={() => {
-                      setActiveIndex(index);
-                      const cur = (education.institution || "").trim();
-                      if (cur.length < 2) {
-                        loadAllLists();
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={education.institution || ""}
+                      onChange={(e) =>
+                        handleInstitutionChange(index, e.target.value)
                       }
-                    }}
-                    onBlur={() =>
-                      setTimeout(
-                        () => setActiveIndex((i) => (i === index ? null : i)),
-                        200
-                      )
-                    }
-                    placeholder="Institution name"
-                    className="px-3 py-2 text-sm"
-                  />
-                  {activeIndex === index && (loading || hasSearched) && (
-                    <div className="md:col-span-2 border border-gray-200 rounded-lg bg-white shadow-sm z-10">
-                      <div className="max-h-44 overflow-auto">
+                      onFocus={() => {
+                        setActiveIndex(index);
+                        const cur = (education.institution || "").trim();
+                        if (cur.length < 2) {
+                          loadAllLists();
+                        }
+                      }}
+                      onBlur={() =>
+                        setTimeout(
+                          () => setActiveIndex((i) => (i === index ? null : i)),
+                          200
+                        )
+                      }
+                      placeholder="Institution name"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {activeIndex === index && (loading || hasSearched) && (
+                      <div className="absolute left-0 top-full mt-1 w-full border border-gray-200 rounded-lg bg-white shadow-lg z-50 max-h-60 overflow-y-auto">
                         {loading && (
                           <div className="px-3 py-2 text-sm text-gray-500">
                             Searching…
@@ -315,7 +316,7 @@ const EducationForm = ({ data, onChange }) => {
                                 e.preventDefault();
                                 applySuggestion(index, s);
                               }}
-                              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 block truncate"
                             >
                               {s}
                             </button>
@@ -328,8 +329,8 @@ const EducationForm = ({ data, onChange }) => {
                             </div>
                           )}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <input
                     type="text"
                     value={education.degree || ""}
@@ -337,7 +338,7 @@ const EducationForm = ({ data, onChange }) => {
                       updateEducation(index, "degree", e.target.value)
                     }
                     placeholder="Degree (e.g, Bachelor's, Masters...)"
-                    className="px-3 py-2 text-sm"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="text"
@@ -345,7 +346,7 @@ const EducationForm = ({ data, onChange }) => {
                     onChange={(e) =>
                       updateEducation(index, "field", e.target.value)
                     }
-                    className="px-3 py-2 text-sm"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Field of study"
                   />
                   <input
@@ -354,7 +355,7 @@ const EducationForm = ({ data, onChange }) => {
                     onChange={(e) =>
                       updateEducation(index, "graduation_date", e.target.value)
                     }
-                    className="px-3 py-2 text-sm disabled:bg-gray-100"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
                   />
                 </div>
                 <input
@@ -363,7 +364,7 @@ const EducationForm = ({ data, onChange }) => {
                   onChange={(e) =>
                     updateEducation(index, "gpa", e.target.value)
                   }
-                  className="px-3 py-2 text-sm disabled:bg-gray-100"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
                   placeholder="GPA (optional)"
                 />
               </div>

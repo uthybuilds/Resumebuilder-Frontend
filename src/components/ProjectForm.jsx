@@ -64,7 +64,7 @@ const ProjectForm = ({ data, onChange }) => {
                       updateProject(index, "name", e.target.value)
                     }
                     placeholder="Project name"
-                    className="px-3 py-2 text-sm rounded-lg"
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="text"
@@ -73,7 +73,7 @@ const ProjectForm = ({ data, onChange }) => {
                       updateProject(index, "type", e.target.value)
                     }
                     placeholder="Project type"
-                    className="px-3 py-2 text-sm rounded-lg"
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <textarea
                     rows={4}
@@ -83,7 +83,7 @@ const ProjectForm = ({ data, onChange }) => {
                       updateProject(index, "description", e.target.value)
                     }
                     placeholder="Describe your Project"
-                    className="w-full px-3 py-2 text-sm rounded-lg resize-none"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   />
                 </div>
               </div>
