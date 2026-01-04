@@ -134,18 +134,29 @@ const Hero = () => {
                 </a>
               </nav>
               <div className="mt-auto flex flex-col gap-2">
-                <a
-                  href="/app?state=register"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md"
-                >
-                  Get started
-                </a>
-                <a
-                  href="/app?state=login"
-                  className="px-4 py-2 border rounded-md hover:bg-slate-50"
-                >
-                  Login
-                </a>
+                {user ? (
+                  <a
+                    href="/app"
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md"
+                  >
+                    Dashboard
+                  </a>
+                ) : (
+                  <>
+                    <a
+                      href="/app?state=register"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md"
+                    >
+                      Get started
+                    </a>
+                    <a
+                      href="/app?state=login"
+                      className="px-4 py-2 border rounded-md hover:bg-slate-50"
+                    >
+                      Login
+                    </a>
+                  </>
+                )}
               </div>
             </div>
           </div>
