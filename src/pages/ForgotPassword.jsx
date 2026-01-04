@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
     try {
       const { data } = await api.post("/api/users/forgot-password", { email });
-      toast.success(data.message || "If the email exists, a link was sent");
+      toast.success("Please reset your password");
       if (data?.resetUrl) {
         await new Promise((r) => setTimeout(r, 2000));
         window.location.href = data.resetUrl;
