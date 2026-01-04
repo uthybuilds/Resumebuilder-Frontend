@@ -264,7 +264,7 @@ const ResumeBuilder = () => {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         <div className="grid lg:grid-cols-12 gap-8">
           {/* left panel - form */}
-          <div className="relative lg:col-span-5 rounded-lg overflow-hidden">
+          <div className="relative lg:col-span-5 rounded-lg overflow-visible">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1">
               {/* progress bar using activeSectionIndex */}
               <div className="relative h-1 mb-6">
