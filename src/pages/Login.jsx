@@ -4,6 +4,7 @@ import api from "../configs/api.js";
 import { useDispatch } from "react-redux";
 import { login } from "../app/features/authSlice";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -98,9 +99,9 @@ const Login = () => {
           </button>
         </div>
         <div className="mt-4 text-left text-indigo-500">
-          <a href="/forgot-password" class="text-sm">
+          <Link to="/forgot-password" className="text-sm">
             Forgot password?
-          </a>
+          </Link>
         </div>
         <button
           type="submit"
