@@ -29,9 +29,11 @@ const Login = () => {
         dispatch(login(data));
         if (data.token) localStorage.setItem("token", data.token);
       } else {
-        if (data?.verifyUrl) {
+        const url = data?.verifyUrl;
+        if (url) {
           toast.success(data.message || "Redirecting to verify...");
-          window.location.href = data.verifyUrl;
+          await new Promise((r) => setTimeout(r, 2000));
+          window.location.href = url;
           return;
         }
       }
