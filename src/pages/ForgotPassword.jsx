@@ -14,8 +14,13 @@ const ForgotPassword = () => {
     setIsLoading(true);
     try {
       const { data } = await api.post("/api/users/forgot-password", { email });
-      toast.success(data.message);
-      // Optional: Redirect or clear form
+      toast.success(data.message || "If the email exists, a link was sent");
+      if (data?.resetUrl) {
+        await new Promise((r) => setTimeout(r, 2000));
+        window.location.href = data.resetUrl;
+        return;
+      }
+      setEmail("");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
