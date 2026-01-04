@@ -1,4 +1,4 @@
-import { Lock, Mail, User2Icon } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, User2Icon } from "lucide-react";
 import React from "react";
 import api from "../configs/api.js";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,8 @@ const Login = () => {
   const query = new URLSearchParams(window.location.search);
   const urlState = query.get("state");
   const [state, setState] = React.useState(urlState || "login");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [formData, setFormData] = React.useState({
     name: "",
@@ -19,6 +21,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const { data } = await api.post(`/api/users/${state}`, formData);
       dispatch(login(data));
@@ -26,6 +29,8 @@ const Login = () => {
       toast.success(data.message);
     } catch (error) {
       toast(error?.response?.data?.message || error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,42 +49,53 @@ const Login = () => {
         </h1>
         <p className="text-gray-500 text-sm mt-2">Please {state} to continue</p>
         {state !== "login" && (
-          <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+          <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden px-6 gap-2">
             <User2Icon size={16} color="#6B7280" />
             <input
               type="text"
               name="name"
               placeholder="Name"
-              className="border-none outline-none ring-0"
+              className="border-none outline-none ring-0 w-full"
               value={formData.name}
               onChange={handleChange}
               required
             />
           </div>
         )}
-        <div className="flex items-center w-full mt-4 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+        <div className="flex items-center w-full mt-4 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden px-6 gap-2">
           <Mail size={13} color="#6B7280" />
           <input
             type="email"
             name="email"
             placeholder="Email id"
-            className="border-none outline-none ring-0"
+            className="border-none outline-none ring-0 w-full"
             value={formData.email}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+        <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden px-6 gap-2">
           <Lock size={13} color="#6B7280" />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            className="border-none outline-none ring-0"
+            className="border-none outline-none ring-0 w-full"
             value={formData.password}
             onChange={handleChange}
             required
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="focus:outline-none"
+          >
+            {showPassword ? (
+              <EyeOff size={16} color="#6B7280" />
+            ) : (
+              <Eye size={16} color="#6B7280" />
+            )}
+          </button>
         </div>
         <div className="mt-4 text-left text-indigo-500">
           <button className="text-sm" type="reset">
@@ -88,9 +104,17 @@ const Login = () => {
         </div>
         <button
           type="submit"
-          className="mt-2 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity"
+          disabled={isLoading}
+          className="mt-2 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {state === "login" ? "Login" : "Sign up"}
+          {isLoading ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              <span>{state === "login" ? "Logging in..." : "Signing up..."}</span>
+            </>
+          ) : (
+            state === "login" ? "Login" : "Sign up"
+          )}
         </button>
         <p
           onClick={() =>
