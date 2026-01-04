@@ -15,6 +15,9 @@ const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const getUserData = async () => {
+    try {
+      await api.get("/");
+    } catch {}
     const token = localStorage.getItem("token");
     try {
       if (token) {
