@@ -31,7 +31,7 @@ const Login = () => {
       } else {
         const url = data?.verifyUrl;
         if (url) {
-          toast.success(data.message || "Redirecting to verify...");
+          toast.success("Redirecting to verification...");
           await new Promise((r) => setTimeout(r, 2000));
           window.location.href = url;
           return;
