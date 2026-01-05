@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./pages/Layout";
 import Dashboard from "./pages/Dashboard";
@@ -11,12 +11,13 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { useDispatch } from "react-redux";
 import api from "./configs/api";
-import { login, setLoading } from "./app/features/authSlice";
+import { login, setLoading, logout } from "./app/features/authSlice";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const getUserData = React.useCallback(async () => {
     try {
       await api.get("/");
@@ -31,6 +32,13 @@ const App = () => {
         });
         if (data.user) {
           dispatch(login({ token, user: data.user }));
+          const lastPath = localStorage.getItem("lastPath");
+          if (
+            lastPath &&
+            (lastPath.startsWith("/app") || lastPath.startsWith("/view"))
+          ) {
+            navigate(lastPath, { replace: true });
+          }
         }
         dispatch(setLoading(false));
       } else {
@@ -40,11 +48,32 @@ const App = () => {
       dispatch(setLoading(false));
       console.log(error.message);
     }
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     getUserData();
   }, [getUserData]);
+
+  useEffect(() => {
+    const limit = 2 * 60 * 60 * 1000;
+    const touch = () => localStorage.setItem("lastActive", String(Date.now()));
+    touch();
+    const onActivity = () => touch();
+    window.addEventListener("mousemove", onActivity);
+    window.addEventListener("keydown", onActivity);
+    const id = setInterval(() => {
+      const last = Number(localStorage.getItem("lastActive") || "0");
+      if (last && Date.now() - last > limit) {
+        dispatch(logout());
+        navigate("/auth?state=login", { replace: true });
+      }
+    }, 60000);
+    return () => {
+      window.removeEventListener("mousemove", onActivity);
+      window.removeEventListener("keydown", onActivity);
+      clearInterval(id);
+    };
+  }, [dispatch, navigate]);
   useEffect(() => {
     const id = "G-HF1VRJ6D7P";
     const url = window.location.href;
@@ -57,6 +86,7 @@ const App = () => {
         send_to: id,
       });
     }
+    localStorage.setItem("lastPath", location.pathname + location.search);
   }, [location.pathname, location.search]);
   return (
     <>

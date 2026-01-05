@@ -21,7 +21,7 @@ const CallToAction = () => {
             Ready to land your dream job? Build your professional resume today.
           </p>
           <Link
-            to="/app"
+            to="/auth?state=login"
             className="flex items-center gap-2 rounded py-3 px-8 bg-indigo-600 hover:bg-indigo-700 transition text-white"
           >
             <span>Get Started</span>

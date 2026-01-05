@@ -48,7 +48,7 @@ const Hero = () => {
 
           <div className="flex gap-2">
             <Link
-              to="/app?state=register"
+              to="/auth?state=login"
               className="hidden lg:block px-6 py-2 bg-indigo-500 hover:bg-indigo-700 active:scale-95 transition-all rounded-full text-white"
               hidden={user}
             >
@@ -144,13 +144,13 @@ const Hero = () => {
                 ) : (
                   <>
                     <a
-                      href="/app?state=register"
+                      href="/auth?state=login"
                       className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md"
                     >
                       Get started
                     </a>
                     <a
-                      href="/app?state=login"
+                      href="/auth?state=login"
                       className="px-4 py-2 border rounded-md hover:bg-slate-50"
                     >
                       Login
@@ -260,7 +260,7 @@ const Hero = () => {
             className="flex items-center gap-4 "
           >
             <Link
-              to="/app"
+              to="/auth?state=login"
               className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-full px-9 h-12 m-1 ring-offset-2 ring-1 ring-indigo-400 flex items-center transition-colors"
             >
               Get started
