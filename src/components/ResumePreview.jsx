@@ -95,7 +95,7 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       </div>
 
       {/* Print Preview (Native Flow, No Transforms) */}
-      <div className="hidden print:block print:w-full print:h-auto">
+      <div id="print-only-resume" className="hidden print:block">
         {renderTemplate()}
       </div>
 
@@ -106,43 +106,28 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
             margin: 0mm;
           }
           @media print {
-            html,
-            body {
+            /* 1. Hide EVERYTHING on the page by default */
+            body * {
+              visibility: hidden;
+            }
+
+            /* 2. Make the print-only resume visible */
+            #print-only-resume,
+            #print-only-resume * {
+              visibility: visible;
+            }
+
+            /* 3. Position the resume at the very top-left of the paper */
+            #print-only-resume {
+              position: absolute;
+              left: 0;
+              top: 0;
               width: 100%;
-              height: auto;
-              overflow: visible;
               margin: 0;
               padding: 0;
             }
-            /* Hide everything by default, then show specific print content */
-            body > *:not(#root) {
-              display: none;
-            }
-            #root {
-              width: 100%;
-            }
-            #resume-preview-container {
-               position: static !important;
-               overflow: visible !important;
-               height: auto !important;
-               background: none !important;
-               display: block !important;
-            }
-            /* Ensure the print-only div is visible and full width */
-            .print\\:block {
-              display: block !important;
-              width: 100% !important;
-              max-width: none !important;
-            }
-            /* Reset template constraints for print */
-            .print\\:block > div {
-              max-width: none !important;
-              width: 100% !important;
-              margin: 0 !important;
-              box-shadow: none !important;
-              border: none !important;
-            }
-            /* Force color accuracy */
+
+            /* 4. Ensure backgrounds/colors print correctly */
             * {
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
