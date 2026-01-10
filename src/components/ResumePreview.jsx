@@ -76,22 +76,29 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       ref={containerRef}
       style={{ height: height ? `${height}px` : "auto" }}
     >
+      {/* Screen Preview (Scaled & Centered) */}
       <div
         ref={contentRef}
         id="resume-preview"
         style={{
           transform: `translateX(-50%) scale(${scale})`,
           transformOrigin: "top center",
-          width: "8.5in", // Fixed width for consistent rendering (matches print size)
+          width: "8.5in",
           left: "50%",
         }}
         className={
-          "border border-gray-200 print:shadow-none print:border-none bg-white absolute top-0" +
+          "print:hidden border border-gray-200 bg-white absolute top-0" +
           (classes ? " " + classes : "")
         }
       >
         {renderTemplate()}
       </div>
+
+      {/* Print Preview (Native Flow, No Transforms) */}
+      <div className="hidden print:block print:w-full print:h-auto">
+        {renderTemplate()}
+      </div>
+
       <style>
         {`
           @page {
@@ -107,8 +114,12 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
               margin: 0;
               padding: 0;
             }
-            body * {
-              visibility: hidden;
+            /* Hide everything by default, then show specific print content */
+            body > *:not(#root) {
+              display: none;
+            }
+            #root {
+              width: 100%;
             }
             #resume-preview-container {
                position: static !important;
@@ -117,28 +128,24 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
                background: none !important;
                display: block !important;
             }
-            #resume-preview,
-            #resume-preview * {
-              visibility: visible;
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
-            }
-            #resume-preview {
-              position: absolute;
-              left: 0;
-              top: 0;
+            /* Ensure the print-only div is visible and full width */
+            .print\\:block {
+              display: block !important;
               width: 100% !important;
               max-width: none !important;
+            }
+            /* Reset template constraints for print */
+            .print\\:block > div {
+              max-width: none !important;
+              width: 100% !important;
               margin: 0 !important;
-              padding: 0 !important;
               box-shadow: none !important;
               border: none !important;
-              transform: none !important;
             }
-            /* Force template content to fill the width */
-            #resume-preview > div {
-              width: 100% !important;
-              max-width: none !important;
+            /* Force color accuracy */
+            * {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
             }
           }
         `}
