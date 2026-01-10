@@ -18,7 +18,7 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
     const handleResize = () => {
       if (!containerRef.current) return;
       const parentWidth = containerRef.current.offsetWidth;
-      const targetWidth = 800; // Approx A4 width
+      const targetWidth = 816; // Approx A4/Letter width (8.5in * 96dpi)
       const padding = 24; // keep some breathing space
       const available = Math.max(parentWidth - padding, 0);
       const newScale = Math.min(available / targetWidth, 1.15);
@@ -71,6 +71,7 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
   };
   return (
     <div
+      id="resume-preview-container"
       className="w-full bg-gray-100 overflow-hidden relative"
       ref={containerRef}
       style={{ height: height ? `${height}px` : "auto" }}
@@ -94,29 +95,39 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       <style>
         {`
           @page {
-            size: letter;
-            margin: 0;
+            size: auto;
+            margin: 0mm;
           }
           @media print {
             html,
             body {
               width: 8.5in;
-              height: 11in;
-              overflow: hidden;
+              height: 100%;
+              overflow: visible;
+              margin: 0;
+              padding: 0;
             }
             body * {
               visibility: hidden;
             }
+            #resume-preview-container {
+               position: static !important;
+               overflow: visible !important;
+               height: auto !important;
+               background: none !important;
+               display: block !important;
+            }
             #resume-preview,
             #resume-preview * {
               visibility: visible;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
             }
             #resume-preview {
               position: absolute;
               left: 0;
               top: 0;
               width: 100% !important;
-              height: auto;
               margin: 0;
               padding: 0;
               box-shadow: none !important;
