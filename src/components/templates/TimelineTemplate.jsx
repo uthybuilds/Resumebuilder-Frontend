@@ -71,8 +71,8 @@ const TimelineTemplate = ({ data, accentColor }) => {
                 {data.experience.map((exp, index) => (
                   <div key={index} className="relative">
                     <div
-                      className="absolute left-0 -ml-1.5 mt-1 w-3 h-3 rounded-full"
-                      style={{ backgroundColor: accentColor }}
+                      className="absolute mt-1.5 w-3 h-3 rounded-full border-2 border-white"
+                      style={{ left: "-29px", backgroundColor: accentColor }}
                     />
                     <div className="flex justify-between items-start">
                       <div>

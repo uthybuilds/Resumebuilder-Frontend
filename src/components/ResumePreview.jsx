@@ -101,8 +101,8 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
           @media print {
             html,
             body {
-              width: 8.5in;
-              height: 100%;
+              width: 100%;
+              height: auto;
               overflow: visible;
               margin: 0;
               padding: 0;
@@ -128,11 +128,17 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
               left: 0;
               top: 0;
               width: 100% !important;
-              margin: 0;
-              padding: 0;
+              max-width: none !important;
+              margin: 0 !important;
+              padding: 0 !important;
               box-shadow: none !important;
               border: none !important;
               transform: none !important;
+            }
+            /* Force template content to fill the width */
+            #resume-preview > div {
+              width: 100% !important;
+              max-width: none !important;
             }
           }
         `}
