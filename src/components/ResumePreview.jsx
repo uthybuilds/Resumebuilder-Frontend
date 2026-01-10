@@ -81,7 +81,7 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
         style={{
           transform: `translateX(-50%) scale(${scale})`,
           transformOrigin: "top center",
-          width: "800px", // Fixed width for consistent rendering
+          width: "8.5in", // Fixed width for consistent rendering (matches print size)
           left: "50%",
         }}
         className={

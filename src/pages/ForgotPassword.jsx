@@ -73,7 +73,7 @@ const ForgotPassword = () => {
             {isLoading ? (
               <Loader2 className="animate-spin w-5 h-5" />
             ) : (
-              "Send Reset Link"
+              "Please verify your email to update password"
             )}
           </button>
         </form>

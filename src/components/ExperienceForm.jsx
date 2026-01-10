@@ -193,20 +193,12 @@ const ExperienceForm = ({ data, onChange }) => {
                 <textarea
                   value={experience.description || ""}
                   onChange={(e) =>
-                    updateExperience(
-                      index,
-                      "description",
-                      sanitizeDescription(e.target.value)
-                    )
+                    updateExperience(index, "description", e.target.value)
                   }
                   onPaste={(e) => {
                     e.preventDefault();
                     const text = e.clipboardData.getData("text/plain");
-                    updateExperience(
-                      index,
-                      "description",
-                      sanitizeDescription(text)
-                    );
+                    updateExperience(index, "description", text);
                   }}
                   rows={4}
                   className="w-full text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
