@@ -12,7 +12,7 @@ import ResetPassword from "./pages/ResetPassword";
 import { useDispatch } from "react-redux";
 import api from "./configs/api";
 import { login, setLoading, logout } from "./app/features/authSlice";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +31,7 @@ const App = () => {
           headers: { Authorization: token },
         });
         if (data.user) {
+          if (!localStorage.getItem("token")) return;
           dispatch(login({ token, user: data.user }));
           const lastPath = localStorage.getItem("lastPath");
           if (
@@ -55,7 +56,17 @@ const App = () => {
   }, [getUserData]);
 
   useEffect(() => {
-    const limit = 2 * 60 * 60 * 1000;
+    const limit = 3 * 60 * 60 * 1000;
+    const lastActiveStr = localStorage.getItem("lastActive");
+    const lastActive = lastActiveStr ? Number(lastActiveStr) : 0;
+
+    if (lastActive && Date.now() - lastActive > limit) {
+      dispatch(logout());
+      navigate("/auth?state=login", { replace: true });
+      toast.error("Session expired. Please sign in again.");
+      return;
+    }
+
     const touch = () => localStorage.setItem("lastActive", String(Date.now()));
     touch();
     const onActivity = () => touch();
@@ -66,6 +77,7 @@ const App = () => {
       if (last && Date.now() - last > limit) {
         dispatch(logout());
         navigate("/auth?state=login", { replace: true });
+        toast.error("Session expired. Please sign in again.");
       }
     }, 60000);
     return () => {
