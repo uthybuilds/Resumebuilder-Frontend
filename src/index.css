@@ -15,3 +15,26 @@
     @apply outline-none focus:ring border border-gray-300  focus:ring-indigo-500 focus:border-indigo-500 rounded-lg resize-none;
   }
 }
+
+@media print {
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
+  #root {
+    display: none;
+  }
+  #print-root {
+    display: block;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media screen {
+  #print-root {
+    display: none;
+  }
+}

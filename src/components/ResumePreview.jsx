@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
@@ -95,46 +96,11 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       </div>
 
       {/* Print Preview (Native Flow, No Transforms) */}
-      <div id="print-only-resume" className="hidden print:block">
-        {renderTemplate()}
-      </div>
-
-      <style>
-        {`
-          @page {
-            size: auto;
-            margin: 0mm;
-          }
-          @media print {
-            /* 1. Hide EVERYTHING on the page by default */
-            body * {
-              visibility: hidden;
-            }
-
-            /* 2. Make the print-only resume visible */
-            #print-only-resume,
-            #print-only-resume * {
-              visibility: visible;
-            }
-
-            /* 3. Position the resume at the very top-left of the paper */
-            #print-only-resume {
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 100%;
-              margin: 0;
-              padding: 0;
-            }
-
-            /* 4. Ensure backgrounds/colors print correctly */
-            * {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
-            }
-          }
-        `}
-      </style>
+      {document.getElementById("print-root") &&
+        createPortal(
+          <div id="print-only-resume">{renderTemplate()}</div>,
+          document.getElementById("print-root")
+        )}
     </div>
   );
 };
