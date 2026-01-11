@@ -84,7 +84,7 @@ const ModernTemplate = ({ data, accentColor }) => {
 						<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
 							Professional Summary
 						</h2>
-						<p className="text-gray-700 ">{data.professional_summary}</p>
+						<p className="text-gray-700 whitespace-pre-line">{data.professional_summary}</p>
 					</section>
 				)}
 

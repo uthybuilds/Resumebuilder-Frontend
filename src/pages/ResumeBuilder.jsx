@@ -14,6 +14,7 @@ import {
   Share2Icon,
   Sparkles,
   User,
+  Loader2,
 } from "lucide-react";
 import PersonalInfoForm from "../components/PersonalInfoForm";
 import ResumePreview from "../components/ResumePreview";
@@ -92,6 +93,7 @@ const ResumeBuilder = () => {
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [removeBackground, setRemoveBackground] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const preventAutoSave = useRef(true);
   const [showShare, setShowShare] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
@@ -192,6 +194,10 @@ const ResumeBuilder = () => {
   const saveResume = useCallback(
     async (payload, silent = false) => {
       try {
+        if (!silent) {
+          setIsSaving(true);
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
         const currentData = payload || resumeData;
         let updatedResumeData = structuredClone(currentData);
 
@@ -223,6 +229,10 @@ const ResumeBuilder = () => {
           toast.error(error?.response?.data?.message || error.message);
         }
         throw error;
+      } finally {
+        if (!silent) {
+          setIsSaving(false);
+        }
       }
     },
     [resumeId, token, removeBackground, resumeData]
@@ -414,9 +424,13 @@ const ResumeBuilder = () => {
                 onClick={() => {
                   saveResume();
                 }}
-                className="bg-gradient-to-br from-indigo-100 to-indigo-200 ring-indigo-300 text-indigo-600 ring hover:ring-indigo-400 transition-all rounded-md px-6 py-2 mt-6 text-sm"
+                disabled={isSaving}
+                className={`bg-gradient-to-br from-indigo-100 to-indigo-200 ring-indigo-300 text-indigo-600 ring hover:ring-indigo-400 transition-all rounded-md px-6 py-2 mt-6 text-sm flex items-center gap-2 cursor-pointer ${
+                  isSaving ? "opacity-70 cursor-not-allowed" : ""
+                }`}
               >
-                Save Changes
+                {isSaving && <Loader2 className="animate-spin size-4" />}
+                {isSaving ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>

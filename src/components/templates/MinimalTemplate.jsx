@@ -58,7 +58,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
             {/* Professional Summary */}
             {data.professional_summary && (
                 <section className="mb-10">
-                    <p className=" text-gray-700">
+                    <p className=" text-gray-700 whitespace-pre-line">
                         {data.professional_summary}
                     </p>
                 </section>

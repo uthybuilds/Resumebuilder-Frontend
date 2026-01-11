@@ -105,7 +105,7 @@ const SplitTemplate = ({ data, accentColor }) => {
             >
               Summary
             </h2>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
               {data.professional_summary}
             </p>
           </section>

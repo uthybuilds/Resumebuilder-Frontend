@@ -180,7 +180,7 @@ const SidebarTemplate = ({ data, accentColor }) => {
               >
                 Summary
               </h2>
-              <p className="text-zinc-700 leading-relaxed">
+              <p className="text-zinc-700 leading-relaxed whitespace-pre-line">
                 {data.professional_summary}
               </p>
             </section>
