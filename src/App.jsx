@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./pages/Layout";
@@ -57,14 +57,18 @@ const App = () => {
 
   useEffect(() => {
     const limit = 3 * 60 * 60 * 1000;
+    const notifiedRef = useRef(false);
     const lastActiveStr = localStorage.getItem("lastActive");
     const lastActive = lastActiveStr ? Number(lastActiveStr) : 0;
 
     if (lastActive && Date.now() - lastActive > limit) {
       dispatch(logout());
+      localStorage.setItem("lastActive", "0");
       navigate("/auth?state=login", { replace: true });
-      toast.error("Session expired. Please sign in again.");
-      return;
+      if (!notifiedRef.current) {
+        toast.error("Session expired. Please sign in again.");
+        notifiedRef.current = true;
+      }
     }
 
     const touch = () => localStorage.setItem("lastActive", String(Date.now()));
@@ -76,8 +80,15 @@ const App = () => {
       const last = Number(localStorage.getItem("lastActive") || "0");
       if (last && Date.now() - last > limit) {
         dispatch(logout());
-        navigate("/auth?state=login", { replace: true });
-        toast.error("Session expired. Please sign in again.");
+        localStorage.setItem("lastActive", "0");
+        const path = window.location.pathname || "";
+        if (!path.startsWith("/auth")) {
+          navigate("/auth?state=login", { replace: true });
+        }
+        if (!notifiedRef.current) {
+          toast.error("Session expired. Please sign in again.");
+          notifiedRef.current = true;
+        }
       }
     }, 60000);
     return () => {
