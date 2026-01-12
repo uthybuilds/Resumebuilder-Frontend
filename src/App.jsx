@@ -18,6 +18,7 @@ const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const notifiedRef = useRef(false);
   const getUserData = React.useCallback(async () => {
     try {
       await api.get("/");
@@ -57,7 +58,11 @@ const App = () => {
 
   useEffect(() => {
     const limit = 3 * 60 * 60 * 1000;
-    const notifiedRef = useRef(false);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      localStorage.setItem("lastActive", "0");
+      return;
+    }
     const lastActiveStr = localStorage.getItem("lastActive");
     const lastActive = lastActiveStr ? Number(lastActiveStr) : 0;
 
