@@ -19,6 +19,7 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const notifiedRef = useRef(false);
+  // Fix: Session expiry toast spam
   const getUserData = React.useCallback(async () => {
     try {
       await api.get("/");

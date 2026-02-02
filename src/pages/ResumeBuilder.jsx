@@ -32,7 +32,7 @@ import toast from "react-hot-toast";
 const ResumeBuilder = () => {
   const { resumeId } = useParams();
   const { token } = useSelector((state) => state.auth);
-
+  // State for resume data
   const [resumeData, setResumeData] = useState({
     _id: "",
     title: "",
