@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Github } from "lucide-react";
 
 const ClassicTemplate = ({ data, accentColor }) => {
   const formatDate = (dateStr) => {
@@ -103,13 +103,40 @@ const ClassicTemplate = ({ data, accentColor }) => {
           {data.personal_info?.linkedin && (
             <div className="flex items-center gap-1">
               <Linkedin className="size-4" />
-              <span className="break-all">{data.personal_info.linkedin}</span>
+              <a
+                href={data.personal_info.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="break-all hover:underline"
+              >
+                {data.personal_info.linkedin}
+              </a>
+            </div>
+          )}
+          {data.personal_info?.github && (
+            <div className="flex items-center gap-1">
+              <Github className="size-4" />
+              <a
+                href={data.personal_info.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="break-all hover:underline"
+              >
+                {data.personal_info.github}
+              </a>
             </div>
           )}
           {data.personal_info?.website && (
             <div className="flex items-center gap-1">
               <Globe className="size-4" />
-              <span className="break-all">{data.personal_info.website}</span>
+              <a
+                href={data.personal_info.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="break-all hover:underline"
+              >
+                {data.personal_info.website}
+              </a>
             </div>
           )}
         </div>

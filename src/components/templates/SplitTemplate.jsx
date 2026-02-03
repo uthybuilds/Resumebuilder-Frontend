@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Github } from "lucide-react";
 
 const SplitTemplate = ({ data, accentColor }) => {
   const formatDate = (dateStr) => {
@@ -6,25 +6,57 @@ const SplitTemplate = ({ data, accentColor }) => {
     const s = String(dateStr).trim();
     if (!s || s.toLowerCase().includes("invalid")) return "";
     if (/^\d{4}$/.test(s)) {
-      return new Date(parseInt(s, 10), 0, 1).toLocaleDateString("en-US", { year: "numeric" });
+      return new Date(parseInt(s, 10), 0, 1).toLocaleDateString("en-US", {
+        year: "numeric",
+      });
     }
     const iso = s.match(/^(\d{4})[-/](\d{1,2})(?:[-/](\d{1,2}))?$/);
     if (iso) {
       const y = parseInt(iso[1], 10);
       const m = parseInt(iso[2], 10);
       if (y && m >= 1 && m <= 12) {
-        return new Date(y, m - 1, 1).toLocaleDateString("en-US", { year: "numeric", month: "short" });
+        return new Date(y, m - 1, 1).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+        });
       }
     }
     const word = s.match(/^([A-Za-z]+)\s+(\d{4})$/);
     if (word) {
-      const map = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11,
-        january:0,february:1,march:2,april:3,june:5,july:6,august:7,september:8,october:9,november:10,december:11 };
+      const map = {
+        jan: 0,
+        feb: 1,
+        mar: 2,
+        apr: 3,
+        may: 4,
+        jun: 5,
+        jul: 6,
+        aug: 7,
+        sep: 8,
+        sept: 8,
+        oct: 9,
+        nov: 10,
+        dec: 11,
+        january: 0,
+        february: 1,
+        march: 2,
+        april: 3,
+        june: 5,
+        july: 6,
+        august: 7,
+        september: 8,
+        october: 9,
+        november: 10,
+        december: 11,
+      };
       const key = word[1].toLowerCase();
       const mo = map[key];
       const y = parseInt(word[2], 10);
       if (mo !== undefined) {
-        return new Date(y, mo, 1).toLocaleDateString("en-US", { year: "numeric", month: "short" });
+        return new Date(y, mo, 1).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+        });
       }
     }
     if (/present/i.test(s)) return "Present";
@@ -73,9 +105,22 @@ const SplitTemplate = ({ data, accentColor }) => {
             >
               <Linkedin className="size-4" style={{ color: accentColor }} />
               <span className="break-all text-xs">
-                {data.personal_info.linkedin.split("https://www.")[1]
-                  ? data.personal_info.linkedin.split("https://www.")[1]
-                  : data.personal_info.linkedin}
+                {data.personal_info.linkedin.replace(
+                  /^https?:\/\/(www\.)?/,
+                  "",
+                )}
+              </span>
+            </a>
+          )}
+          {data.personal_info?.github && (
+            <a
+              target="_blank"
+              href={data.personal_info.github}
+              className="flex items-center gap-2"
+            >
+              <Github className="size-4" style={{ color: accentColor }} />
+              <span className="break-all text-xs">
+                {data.personal_info.github.replace(/^https?:\/\/(www\.)?/, "")}
               </span>
             </a>
           )}
@@ -87,9 +132,7 @@ const SplitTemplate = ({ data, accentColor }) => {
             >
               <Globe className="size-4" style={{ color: accentColor }} />
               <span className="break-all text-xs">
-                {data.personal_info.website.split("https://")[1]
-                  ? data.personal_info.website.split("https://")[1]
-                  : data.personal_info.website}
+                {data.personal_info.website.replace(/^https?:\/\/(www\.)?/, "")}
               </span>
             </a>
           )}
@@ -131,11 +174,15 @@ const SplitTemplate = ({ data, accentColor }) => {
                     </div>
                     {(() => {
                       const start = formatDate(exp.start_date);
-                      const end = exp.is_current ? "Present" : formatDate(exp.end_date);
+                      const end = exp.is_current
+                        ? "Present"
+                        : formatDate(exp.end_date);
                       const hasDate = !!start || !!end;
                       return hasDate ? (
                         <div className="text-xs text-gray-500">
-                          {start}{start && end ? " - " : ""}{end}
+                          {start}
+                          {start && end ? " - " : ""}
+                          {end}
                         </div>
                       ) : null;
                     })()}
@@ -164,7 +211,9 @@ const SplitTemplate = ({ data, accentColor }) => {
                 <div key={index} className="border rounded-lg p-4">
                   <h3 className="text-md font-medium">{p.name}</h3>
                   {p.description && (
-                    <p className="text-sm text-gray-700 mt-1">{p.description}</p>
+                    <p className="text-sm text-gray-700 mt-1">
+                      {p.description}
+                    </p>
                   )}
                 </div>
               ))}

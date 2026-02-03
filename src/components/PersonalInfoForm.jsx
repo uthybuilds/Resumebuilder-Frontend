@@ -6,6 +6,7 @@ import {
   MapPin,
   Phone,
   User,
+  Github,
 } from "lucide-react";
 import React from "react";
 
@@ -56,6 +57,12 @@ const PersonalInfoForm = ({
       key: "linkedin",
       label: "Linkedin",
       icon: Linkedin,
+      type: "url",
+    },
+    {
+      key: "github",
+      label: "Github",
+      icon: Github,
       type: "url",
     },
     {

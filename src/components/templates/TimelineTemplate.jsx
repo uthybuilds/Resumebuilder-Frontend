@@ -1,3 +1,5 @@
+import { Mail, Phone, MapPin, Linkedin, Globe, Github } from "lucide-react";
+
 const TimelineTemplate = ({ data, accentColor }) => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -74,9 +76,69 @@ const TimelineTemplate = ({ data, accentColor }) => {
         <h1 className="text-3xl font-light">
           {data.personal_info?.full_name || "Your Name"}
         </h1>
-        <p className="text-sm opacity-90">
+        <p className="text-sm opacity-90 mb-4">
           {data?.personal_info?.profession || "Profession"}
         </p>
+
+        <div className="flex flex-wrap gap-4 text-sm opacity-90">
+          {data.personal_info?.email && (
+            <div className="flex items-center gap-1">
+              <Mail className="size-4" />
+              <span>{data.personal_info.email}</span>
+            </div>
+          )}
+          {data.personal_info?.phone && (
+            <div className="flex items-center gap-1">
+              <Phone className="size-4" />
+              <span>{data.personal_info.phone}</span>
+            </div>
+          )}
+          {data.personal_info?.location && (
+            <div className="flex items-center gap-1">
+              <MapPin className="size-4" />
+              <span>{data.personal_info.location}</span>
+            </div>
+          )}
+          {data.personal_info?.linkedin && (
+            <div className="flex items-center gap-1">
+              <Linkedin className="size-4" />
+              <a
+                href={data.personal_info.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {data.personal_info.linkedin}
+              </a>
+            </div>
+          )}
+          {data.personal_info?.github && (
+            <div className="flex items-center gap-1">
+              <Github className="size-4" />
+              <a
+                href={data.personal_info.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {data.personal_info.github}
+              </a>
+            </div>
+          )}
+          {data.personal_info?.website && (
+            <div className="flex items-center gap-1">
+              <Globe className="size-4" />
+              <a
+                href={data.personal_info.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {data.personal_info.website}
+              </a>
+            </div>
+          )}
+        </div>
       </header>
       <div className="p-8">
         {data.professional_summary && (

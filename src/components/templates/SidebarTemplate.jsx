@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, Github } from "lucide-react";
 
 const SidebarTemplate = ({ data, accentColor }) => {
   const formatDate = (dateStr) => {
@@ -104,9 +104,25 @@ const SidebarTemplate = ({ data, accentColor }) => {
               >
                 <Linkedin size={14} style={{ color: accentColor }} />
                 <span className="break-all text-xs">
-                  {data.personal_info.linkedin.split("https://www.")[1]
-                    ? data.personal_info.linkedin.split("https://www.")[1]
-                    : data.personal_info.linkedin}
+                  {data.personal_info.linkedin.replace(
+                    /^https?:\/\/(www\.)?/,
+                    "",
+                  )}
+                </span>
+              </a>
+            )}
+            {data.personal_info?.github && (
+              <a
+                target="_blank"
+                href={data.personal_info.github}
+                className="flex items-center gap-2"
+              >
+                <Github size={14} style={{ color: accentColor }} />
+                <span className="break-all text-xs">
+                  {data.personal_info.github.replace(
+                    /^https?:\/\/(www\.)?/,
+                    "",
+                  )}
                 </span>
               </a>
             )}
@@ -118,9 +134,10 @@ const SidebarTemplate = ({ data, accentColor }) => {
               >
                 <Globe size={14} style={{ color: accentColor }} />
                 <span className="break-all text-xs">
-                  {data.personal_info.website.split("https://")[1]
-                    ? data.personal_info.website.split("https://")[1]
-                    : data.personal_info.website}
+                  {data.personal_info.website.replace(
+                    /^https?:\/\/(www\.)?/,
+                    "",
+                  )}
                 </span>
               </a>
             )}

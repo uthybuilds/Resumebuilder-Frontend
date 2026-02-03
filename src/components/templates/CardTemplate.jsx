@@ -1,3 +1,5 @@
+import { Mail, Phone, MapPin, Linkedin, Globe, Github } from "lucide-react";
+
 const CardTemplate = ({ data, accentColor }) => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -76,6 +78,74 @@ const CardTemplate = ({ data, accentColor }) => {
             <p className="text-sm text-gray-600">
               {data?.personal_info?.profession || "Profession"}
             </p>
+          </div>
+          <div className="flex flex-col items-end gap-1 text-xs text-gray-600">
+            {data.personal_info?.email && (
+              <div className="flex items-center gap-1">
+                <Mail className="size-3" />
+                <span>{data.personal_info.email}</span>
+              </div>
+            )}
+            {data.personal_info?.phone && (
+              <div className="flex items-center gap-1">
+                <Phone className="size-3" />
+                <span>{data.personal_info.phone}</span>
+              </div>
+            )}
+            {data.personal_info?.location && (
+              <div className="flex items-center gap-1">
+                <MapPin className="size-3" />
+                <span>{data.personal_info.location}</span>
+              </div>
+            )}
+            {data.personal_info?.linkedin && (
+              <a
+                href={data.personal_info.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 hover:underline"
+              >
+                <Linkedin className="size-3" />
+                <span className="break-all max-w-[150px] truncate">
+                  {data.personal_info.linkedin.replace(
+                    /^https?:\/\/(www\.)?/,
+                    "",
+                  )}
+                </span>
+              </a>
+            )}
+            {data.personal_info?.github && (
+              <a
+                href={data.personal_info.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 hover:underline"
+              >
+                <Github className="size-3" />
+                <span className="break-all max-w-[150px] truncate">
+                  {data.personal_info.github.replace(
+                    /^https?:\/\/(www\.)?/,
+                    "",
+                  )}
+                </span>
+              </a>
+            )}
+            {data.personal_info?.website && (
+              <a
+                href={data.personal_info.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 hover:underline"
+              >
+                <Globe className="size-3" />
+                <span className="break-all max-w-[150px] truncate">
+                  {data.personal_info.website.replace(
+                    /^https?:\/\/(www\.)?/,
+                    "",
+                  )}
+                </span>
+              </a>
+            )}
           </div>
         </div>
 
