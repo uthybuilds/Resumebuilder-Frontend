@@ -48,6 +48,16 @@ const Login = () => {
           setShowPassword(false);
           window.location.href = url;
           return;
+        } else if (data?.token) {
+          // Fallback if verifyUrl is missing but token is present
+          toast.success("Redirecting to verification...");
+          await new Promise((r) => setTimeout(r, 2000));
+          setFormData({ name: "", email: "", password: "" });
+          setShowPassword(false);
+          // Construct URL on client side using current origin if possible, or relative path
+          // Assuming verification page is at /verify-email/:token
+          window.location.href = `/verify-email/${data.token}`;
+          return;
         }
       }
       toast.success(data.message);
