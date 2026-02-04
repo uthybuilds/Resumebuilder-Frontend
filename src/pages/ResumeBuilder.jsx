@@ -11,6 +11,7 @@ import {
   FileText,
   FolderIcon,
   GraduationCap,
+  Award,
   Share2Icon,
   Sparkles,
   User,
@@ -23,6 +24,7 @@ import ColorPicker from "../components/ColorPicker";
 import ProfessionalSummaryForm from "../components/ProfessionalSummaryForm";
 import ExperienceForm from "../components/ExperienceForm";
 import EducationForm from "../components/EducationForm";
+import CertificationForm from "../components/CertificationForm";
 import ProjectForm from "../components/ProjectForm";
 import SkillsForm from "../components/SkillsForm";
 import { useSelector } from "react-redux";
@@ -40,6 +42,7 @@ const ResumeBuilder = () => {
     professional_summary: "",
     experience: [],
     education: [],
+    certifications: [],
     project: [],
     skills: [],
     template: "classic",
@@ -77,6 +80,7 @@ const ResumeBuilder = () => {
               : "",
           experience: Array.isArray(r.experience) ? r.experience : [],
           education: normalizedEducation,
+          certifications: Array.isArray(r.certifications) ? r.certifications : [],
           project: Array.isArray(r.project) ? r.project : [],
           skills: Array.isArray(r.skills) ? r.skills : [],
           template: r.template || "classic",
@@ -123,6 +127,11 @@ const ResumeBuilder = () => {
       id: "education",
       name: "Education",
       icon: GraduationCap,
+    },
+    {
+      id: "certifications",
+      name: "Certifications",
+      icon: Award,
     },
     {
       id: "projects",
@@ -390,6 +399,17 @@ const ResumeBuilder = () => {
                       setResumeData((prev) => ({
                         ...prev,
                         education: data,
+                      }))
+                    }
+                  />
+                )}
+                {activeSection.id === "certifications" && (
+                  <CertificationForm
+                    data={resumeData.certifications}
+                    onChange={(data) =>
+                      setResumeData((prev) => ({
+                        ...prev,
+                        certifications: data,
                       }))
                     }
                   />

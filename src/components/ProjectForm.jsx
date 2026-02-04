@@ -6,6 +6,7 @@ const ProjectForm = ({ data, onChange }) => {
     const newProject = {
       name: "",
       type: "",
+      technologies: "",
       description: "",
     };
     onChange([...data, newProject]);
@@ -74,6 +75,15 @@ const ProjectForm = ({ data, onChange }) => {
                     }
                     placeholder="Project type"
                     className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <input
+                    type="text"
+                    value={project.technologies || ""}
+                    onChange={(e) =>
+                      updateProject(index, "technologies", e.target.value)
+                    }
+                    placeholder="Technologies (e.g., React, Node.js)"
+                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 col-span-2"
                   />
                   <textarea
                     rows={4}

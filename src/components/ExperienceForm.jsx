@@ -16,7 +16,7 @@ const ExperienceForm = ({ data, onChange }) => {
         l
           .replace(/^\s*(?:[-*••]|[0-9]+[.)]|[a-zA-Z][.)]|–|—)\s+/, "")
           .replace(/\s+/g, " ")
-          .trim()
+          .trim(),
       );
     return lines.join("\n");
   };
@@ -25,6 +25,8 @@ const ExperienceForm = ({ data, onChange }) => {
     const newExperience = {
       company: "",
       position: "",
+      location: "",
+      work_type: "",
       start_date: "",
       end_date: "",
       description: "",
@@ -63,13 +65,13 @@ const ExperienceForm = ({ data, onChange }) => {
               company ? " at " + company : ""
             }. Use 1–2 ATS-friendly sentences.`,
         },
-        { headers: { Authorization: token } }
+        { headers: { Authorization: token } },
       );
       if (resp.enhancedContent) {
         updateExperience(
           index,
           "description",
-          sanitizeDescription(resp.enhancedContent)
+          sanitizeDescription(resp.enhancedContent),
         );
         toast.success("Description enhanced");
       }
@@ -139,6 +141,24 @@ const ExperienceForm = ({ data, onChange }) => {
                   className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
+                  type="text"
+                  value={experience.location || ""}
+                  onChange={(e) =>
+                    updateExperience(index, "location", e.target.value)
+                  }
+                  placeholder="Location"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="text"
+                  value={experience.work_type || ""}
+                  onChange={(e) =>
+                    updateExperience(index, "work_type", e.target.value)
+                  }
+                  placeholder="Work Type (Remote, Onsite, etc.)"
+                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
                   type="month"
                   value={experience.start_date || ""}
                   onChange={(e) =>
@@ -165,7 +185,7 @@ const ExperienceForm = ({ data, onChange }) => {
                     updateExperience(
                       index,
                       "is_current",
-                      e.target.checked ? true : false
+                      e.target.checked ? true : false,
                     );
                   }}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
@@ -198,7 +218,20 @@ const ExperienceForm = ({ data, onChange }) => {
                   onPaste={(e) => {
                     e.preventDefault();
                     const text = e.clipboardData.getData("text/plain");
-                    updateExperience(index, "description", text);
+                    const incoming = sanitizeDescription(text);
+                    const current = String(experience.description || "");
+                    const merged = [current.trim(), incoming.trim()]
+                      .filter(Boolean)
+                      .join(current.trim() ? "\n" : "");
+                    const unique = Array.from(
+                      new Set(
+                        merged
+                          .split(/\r?\n/)
+                          .map((l) => l.trim())
+                          .filter((l) => l.length > 0),
+                      ),
+                    ).join("\n");
+                    updateExperience(index, "description", unique);
                   }}
                   rows={4}
                   className="w-full text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"

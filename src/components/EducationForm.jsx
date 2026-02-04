@@ -82,6 +82,9 @@ const EducationForm = ({ data, onChange }) => {
       institution: "",
       degree: "",
       field: "",
+      location: "",
+      start_date: "",
+      end_date: "",
       graduation_date: "",
       gpa: "",
     };
@@ -120,15 +123,15 @@ const EducationForm = ({ data, onChange }) => {
         // Prefer Nigeria results first
         let r1 = await tryJSON(
           `https://universities.hipolabs.com/search?name=${encodeURIComponent(
-            q
-          )}&country=Nigeria`
+            q,
+          )}&country=Nigeria`,
         );
         let r2 = [];
         if (!r1 || r1.length === 0) {
           r2 = await tryJSON(
             `https://universities.hipolabs.com/search?name=${encodeURIComponent(
-              q
-            )}`
+              q,
+            )}`,
           );
         }
         if (
@@ -137,7 +140,7 @@ const EducationForm = ({ data, onChange }) => {
           q.toLowerCase().includes("university")
         ) {
           r1 = await tryJSON(
-            "http://universities.hipolabs.com/search?country=Nigeria"
+            "http://universities.hipolabs.com/search?country=Nigeria",
           );
         }
         const seen = new Set();
@@ -168,17 +171,17 @@ const EducationForm = ({ data, onChange }) => {
         api.get("/api/ai/universities/all"),
       ]);
       setNigeriaAll(
-        Array.isArray(ng.data?.suggestions) ? ng.data.suggestions : []
+        Array.isArray(ng.data?.suggestions) ? ng.data.suggestions : [],
       );
       setGlobalAll(
-        Array.isArray(gl.data?.suggestions) ? gl.data.suggestions : []
+        Array.isArray(gl.data?.suggestions) ? gl.data.suggestions : [],
       );
       let merged = Array.from(
         new Set([
           ...(ng.data?.suggestions || []),
           ...(gl.data?.suggestions || []),
           ...NIGERIA_SEED,
-        ])
+        ]),
       );
       if (merged.length === 0) merged = NIGERIA_SEED;
       setSuggestions(merged);
@@ -201,7 +204,7 @@ const EducationForm = ({ data, onChange }) => {
     if (!q || q.trim().length < 1) {
       debounceRef.current = setTimeout(() => {
         const merged = Array.from(
-          new Set([...(nigeriaAll || []), ...(globalAll || [])])
+          new Set([...(nigeriaAll || []), ...(globalAll || [])]),
         );
         setSuggestions(merged);
         setHasSearched(false);
@@ -210,7 +213,7 @@ const EducationForm = ({ data, onChange }) => {
     }
     // Prefer client-side filtering first if we have full lists
     const merged = Array.from(
-      new Set([...(nigeriaAll || []), ...(globalAll || [])])
+      new Set([...(nigeriaAll || []), ...(globalAll || [])]),
     );
     if (merged.length > 0) {
       debounceRef.current = setTimeout(() => {
@@ -293,7 +296,7 @@ const EducationForm = ({ data, onChange }) => {
                       onBlur={() =>
                         setTimeout(
                           () => setActiveIndex((i) => (i === index ? null : i)),
-                          200
+                          200,
                         )
                       }
                       placeholder="Institution name"
@@ -331,6 +334,15 @@ const EducationForm = ({ data, onChange }) => {
                       </div>
                     )}
                   </div>
+                  <input
+                    type="text"
+                    value={education.location || ""}
+                    onChange={(e) =>
+                      updateEducation(index, "location", e.target.value)
+                    }
+                    placeholder="Location"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                   <input
                     type="text"
                     value={education.degree || ""}

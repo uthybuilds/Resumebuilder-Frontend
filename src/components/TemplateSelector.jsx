@@ -49,6 +49,11 @@ const TemplateSelector = ({ selectedTemplate, onChange }) => {
       name: "Card",
       preview: "Section cards and chips with subtle shadows",
     },
+    {
+      id: "jake",
+      name: "Jake's Resume",
+      preview: "The famous single-column LaTeX-style resume template",
+    },
   ];
 
   useEffect(() => {

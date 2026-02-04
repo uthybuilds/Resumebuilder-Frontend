@@ -8,6 +8,7 @@ import SidebarTemplate from "./templates/SidebarTemplate";
 import SplitTemplate from "./templates/SplitTemplate";
 import TimelineTemplate from "./templates/TimelineTemplate";
 import CardTemplate from "./templates/CardTemplate";
+import JakeTemplate from "./templates/JakeTemplate";
 
 const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
   const containerRef = useRef(null);
@@ -65,6 +66,8 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
         return <TimelineTemplate data={data} accentColor={accentColor} />;
       case "card":
         return <CardTemplate data={data} accentColor={accentColor} />;
+      case "jake":
+        return <JakeTemplate data={data} accentColor={accentColor} />;
 
       default:
         return <ClassicTemplate data={data} accentColor={accentColor} />;
@@ -99,7 +102,7 @@ const ResumePreview = ({ data, template, accentColor, classes = "" }) => {
       {document.getElementById("print-root") &&
         createPortal(
           <div id="print-only-resume">{renderTemplate()}</div>,
-          document.getElementById("print-root")
+          document.getElementById("print-root"),
         )}
     </div>
   );
